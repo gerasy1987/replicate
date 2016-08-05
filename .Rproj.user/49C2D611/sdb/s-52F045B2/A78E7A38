@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "rm(list = ls())\n\nif (!require(pacman)) install.packages(pacman)\npacman::p_load(plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest,\n               wakefield, magrittr)\n\ndata_individual <-\n  r_data_frame(\n    n = 1000,\n    vote = rbinom(size = 0:1, prob = c(.4,.6)),\n    age(x = 18:65, name = \"age\"),\n    race(x = c(\"white\", \"hispanic\", \"black\", \"asian\"),\n         prob = c(0.5, 0.20, 0.20, 0.1), name = \"ethnicity\"),\n    r_dummy(sex, x = c(\"male\", \"female\"), name = \"gender\"),\n    grade(sd = 18, name = \"school_grade\"),\n    income(digits = 1, name = \"income\"),\n    iq(mean = 100, sd = 20, name = \"iq\", digits = 3),\n    height_cm(mean = 175, sd = 30, name = \"height\", digits = 3)\n  ) %>%\n  r_na(cols = -c(1:9), prob=.1)\n\ndata_individual %<>%\n  mutate(treat = rep(sample(rep(0:1, each = 25), 50, replace = FALSE), each = 20),\n         village_id = rep(1:50, each = 20),\n         ind_id = 1:1000)\n\ndata_admin <-\n  data_individual %>%\n  group_by(village_id) %>%\n  summarise_at(.cols = vars(age, school_grade, income, iq, height, treat),\n               .funs = funs(mean(., na.rm = TRUE)))\n\ndata_admin <-\n  r_data_frame(\n    n = 50,\n    turnout = rbeta(shape1 = 2, shape2 = 2),\n    r_dummy(area, name = \"area\", x = c(\"urban\", \"rural\")),\n    population = rpois(lambda = 1000)\n  ) %>%\n  cbind(data_admin, .) %>%\n  as.tbl\n\n\nx <-\n  create_replication(\n    data_list =\n      list(data_admin = data_admin,\n           data_individual = data_individual),\n    packages =\n      c(\"plyr\", \"dplyr\", \"broom\", \"Hmisc\",\n        \"lfe\", \"multiwayvcov\", \"lmtest\",\n        \"wakefield\", \"magrittr\"),\n    project_path = NULL,\n    function_script_path = \"replication_function.R\",\n    replication_script_path = \"replication_script.R\",\n    description_list =\n      list(study_name = \"Fake Study\",\n           study_authors = c(\"Georgiy Syunyaev\", \"Someone Else\"),\n           study_affiliations = c(\"Columbia University\",\n                                  \"Some Other University\"),\n           rep_authors = c(\"Georgiy Syunyaev\"),\n           study_abstract = \"The aim of this study is to test the create_replication() functionality. This is the first attempt at creating replication class of objects in [R] for systematic storage and access to study replication materials.\"),\n    quietly = TRUE,\n    checks = FALSE\n  )\n\nsummary(x)\nsummary(x, table = \"table_1\", reported = TRUE, registered = FALSE)\nsummary(x, table = \"table_2\", reported = TRUE, registered = TRUE)\n",
+    "created" : 1470279327845.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4151330187",
+    "id" : "A78E7A38",
+    "lastKnownWriteTime" : 1470358345,
+    "last_content_update" : 1470358345905,
+    "path" : "~/Google Drive/7 - Projects/Replicate/tryout.R",
+    "project_path" : "tryout.R",
+    "properties" : {
+        "chunk_rendered_width" : "650",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
