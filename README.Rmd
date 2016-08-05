@@ -49,7 +49,8 @@ data_list = list(data_admin = data_admin, data_individual = data_individual)
   - `function_script_path`: Character string giving the name of `[R]` script which contains all functions required for the replication. The script should only include declarations of named functions using `<-` operator. See [replication\_functions.R](https://github.com/gerasy1987/replicate/blob/master/example/replication_functions.R) for example.
   - `replication_script_path`: Character string giving the name of `[R]` script which contains all calls for table replications. The script should consist of only single calls for replication of one table and the table objects should be created using `<-` operator. See [replication\_script.R](https://github.com/gerasy1987/replicate/blob/master/example/replication_script.R) for example.
     
-2. There are also 2 additional arguments:
+There are also 2 additional arguments:
+  
   - `quietly = FALSE`: Logical. Whether the creation of replication should go without any messages printed to `console`. Defaults to `FALSE`.
   - `checks = TRUE`: Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed. Defaults to `TRUE`.
 
