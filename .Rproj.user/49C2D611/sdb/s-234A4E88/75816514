@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "table_1 <-\n  mapply(FUN = analyses,\n         MoreArgs = list(DV = \"school_grade\",\n                         treat = \"treat\",\n                         FE = \"ethnicity\",\n                         data = data_individual),\n         covs = list(column_1 = c(\"male\", \"income\"),\n                     column_1_rep = c(\"male\", \"income\"),\n                     column_2 = NULL,\n                     column_2_rep = NULL),\n         heterogenous = list(NULL,\"iq\", NULL, \"iq\"),\n         subset = list(\"iq >= 50\", NULL, \"iq >= 50\", NULL),\n         status = list(c(F,T,T), c(T,T,F), c(F,T,T), c(T,F,F)  ),\n         USE.NAMES = TRUE)\n\ntable_2 <-\n  mapply(FUN = analyses,\n         MoreArgs = list(DV = \"turnout\",\n                         treat = \"treat\",\n                         FE = \"urban\",\n                         data = data_admin),\n         covs = list(column_1 = c(\"age\", \"school_grade\"),\n                     column_1_rep = c(\"age\", \"school_grade\"),\n                     column_2 = c(\"height\", \"income\"),\n                     column_3 = c(\"age\", \"school_grade\", \"height\", \"income\"),\n                     column_3_rep = c(\"age\", \"school_grade\", \"height\", \"income\")\n                     ),\n         heterogenous = list(NULL,\"iq\", NULL, NULL, \"iq\"),\n         subset = list(\"iq >= 50\", NULL, \"iq >= 50\", \"iq >= 50\", NULL),\n         status = list(c(F,T,T), c(T,T,F), c(T,T,T), c(F,T,T), c(T,F,F) ),\n         USE.NAMES = TRUE)\n",
+    "created" : 1470364902072.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "496703863",
+    "id" : "75816514",
+    "lastKnownWriteTime" : 1470364975,
+    "last_content_update" : 1470364975757,
+    "path" : "~/Google Drive/7 - Projects/replicate/example/replication_script.R",
+    "project_path" : "example/replication_script.R",
+    "properties" : {
+        "chunk_rendered_width" : "650"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

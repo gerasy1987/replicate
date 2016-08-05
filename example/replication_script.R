@@ -22,11 +22,10 @@ table_2 <-
          covs = list(column_1 = c("age", "school_grade"),
                      column_1_rep = c("age", "school_grade"),
                      column_2 = c("height", "income"),
-                     column_2_rep = c("height", "income"),
                      column_3 = c("age", "school_grade", "height", "income"),
                      column_3_rep = c("age", "school_grade", "height", "income")
                      ),
-         heterogenous = list(NULL,"iq", NULL, "iq", NULL, "iq"),
-         subset = list("iq >= 50", NULL, "iq >= 50", NULL, "iq >= 50", NULL),
-         status = list(c(T,T,T), c(T,T,F), c(T,T,T), c(T,F,F), c(F,T,T), c(T,F,F) ),
+         heterogenous = list(NULL,"iq", NULL, NULL, "iq"),
+         subset = list("iq >= 50", NULL, "iq >= 50", "iq >= 50", NULL),
+         status = list(c(F,T,T), c(T,T,F), c(T,T,T), c(F,T,T), c(T,F,F) ),
          USE.NAMES = TRUE)
