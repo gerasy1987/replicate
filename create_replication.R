@@ -7,7 +7,7 @@ create_replication <- function(description_list,
                                function_script_path,
                                replication_script_path,
                                quietly = FALSE,
-                               checks = FALSE) {
+                               checks = TRUE) {
 
   # required packages
   requireNamespace("plyr", quietly = TRUE)
