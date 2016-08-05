@@ -3,6 +3,7 @@ output:
   github_document:
     toc: true
     toc_depth: 3
+    highlight: tango
 ---
 
 ```{r global_options, echo=FALSE}
@@ -67,9 +68,10 @@ The function takes the following arguments:
   - `desc = FALSE`: *To be implemented...*
   - `data_desc = FALSE`: *To be implemented...*
 
-## Example
+## Examples
 
-```{r example}
+### Use of `create_replication()`
+```{r example_creation}
 load(file = "example/replication_data.Rdata")
 
 source("create_replication.R")
@@ -93,11 +95,17 @@ x <-
            study_affiliations = c("Columbia University",
                                   "Some Other University"),
            rep_authors = c("Georgiy Syunyaev"),
-           study_abstract = "The aim of this study is to test the create_replication() functionality. This is the first attempt at creating replication class of objects in [R] for systematic storage and access to study replication materials."),
+           study_abstract = 
+             paste0("The aim of this study is to test the create_replication() functionality. ",
+                    "This is the first attempt at creatreplication class of objects in [R] ",
+                    "for systematic storage and access to study replication materials.")),
     quietly = TRUE,
     checks = FALSE
   )
+```
 
+### Use of `summary.replication()`
+```{r example_summary}
 summary(x)
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
 summary(x, table = "table_2", reported = TRUE, registered = TRUE)
