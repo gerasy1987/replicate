@@ -76,7 +76,8 @@ load(file = "example/replication_data.Rdata")
 source("create_replication.R")
 source("summary.R")
 
-x <-
+(
+  x <-
   create_replication(
     data_list =
       list(data_admin = data_admin,
@@ -101,6 +102,7 @@ x <-
     quietly = TRUE,
     checks = FALSE
   )
+)
 ```
 
 ### Use of `summary.replication()`
