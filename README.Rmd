@@ -3,7 +3,7 @@ output:
   github_document:
     toc: true
     toc_depth: 3
-    highlight: tango
+    highlight: pygments
 ---
 
 ```{r global_options, echo=FALSE}
