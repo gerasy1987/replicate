@@ -2,6 +2,10 @@ language: r
 sudo: false
 cache: packages
 warnings_are_errors: false
+r_github_packages:
+  - gerasy1987/replicate
+after_success:
+  - Rscript -e 'covr::coveralls()'
 notifications:
   email:
     recipients:

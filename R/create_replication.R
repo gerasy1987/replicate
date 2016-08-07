@@ -202,7 +202,6 @@ print.replication <- function(x, ...){
   invisible(x)
 }
 
-#' @export
 add_study_description <- function(starting_description,
                                   pattern,
                                   description_text,
@@ -243,7 +242,6 @@ add_study_description <- function(starting_description,
   }
 }
 
-#' @export
 add_tech_description <- function(starting_description,
                                  type_of_object,
                                  middle_part = " provided: ",

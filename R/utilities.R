@@ -9,6 +9,8 @@
 #' @examples
 #' # ADD EXAMPLES HERE
 #'
+#' @importFrom utils install.packages installed.packages
+#'
 #' @export
 
 ipak <- function(pkg, quietly = FALSE) {
