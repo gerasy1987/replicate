@@ -9,7 +9,7 @@ output:
 
 - [ ] Discuss
 - [x] ~~Transform into package~~
-- Finish writing the `summary` method
+- [ ] Finish writing the `summary.replication()` method:
     - [x] ~~Add replication script functionality~~
     - [ ] Add description functionality for data, etc. (?)
 - [ ] Implement `output_table()` functionality
