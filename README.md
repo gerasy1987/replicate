@@ -10,30 +10,6 @@
             -   [Replication script](#replication-script)
 -   [TODO](#todo)
 
-<style type="text/css">
-
-body{ /* Normal  */
-   font-size: 14px;
-}
-td {  /* Table  */
-   font-size: 10px;
-}
-h1 { /* Header 1 */
- font-size: 28px;
-}
-h2 { /* Header 2 */
- font-size: 22px;
-}
-h3 { /* Header 3 */
- font-size: 18px;
-}
-code.r{ /* Code block */
-  font-size: 12px;
-}
-pre { /* Code block */
-  font-size: 12px
-}
-</style>
 ``` r
 ipak <- function(pkg, quietly = FALSE) {
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
@@ -261,7 +237,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.058 85.013 [1.058]   0.000
+    1 intercept   85.013     1.017 85.013 [1.017]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -271,7 +247,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.657 84.937 [0.657]   0.000
+    1 intercept   84.937     0.661 84.937 [0.661]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -287,7 +263,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.830 -0.368 [0.830]   1.340
+    1    intercept   -0.368     0.850 -0.368 [0.850]   1.332
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -297,7 +273,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.664  0.711 [0.664]   0.290
+    1 intercept    0.711     0.678  0.711 [0.678]   0.300
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -307,7 +283,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.120 -0.215 [1.120]   1.151
+    1    intercept   -0.215     1.110 -0.215 [1.110]   1.152
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -321,7 +297,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.220  0.324 [1.220]   0.792
+    1    intercept    0.324     1.261  0.324 [1.261]   0.798
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -333,7 +309,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.664  0.711 [0.664]   0.290
+    1 intercept    0.711     0.678  0.711 [0.678]   0.300
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -343,7 +319,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.465  0.676 [1.465]   0.647
+    1    intercept    0.676     1.497  0.676 [1.497]   0.654
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
