@@ -2,12 +2,12 @@ rm(list = ls())
 library(testthat)
 library(replicate)
 
-context("create replication object")
+context("summary method for replication")
 
-test_that("replication object creation works", {
+test_that("replication summary works", {
 
-  # NEED TO REPLACE THIS
-  data_admin <- data_individual <- datasets::mtcars
+  data_admin <- read.csv("data_admin.csv")
+  data_individual <- read.csv("data_individual.csv")
 
   x <-
     create_replication(
@@ -40,7 +40,24 @@ test_that("replication object creation works", {
   # Nothing to report, nothing returned
   expect_equal(class(summary(x, table = "table_1")), "NULL")
 
-  # Throws error since table_1 code does not work on mtcars dataset
-  expect_error(summary(x, table = "table_1", reported = TRUE))
+  # Test table replication reported
+  expect_equal(class(summary(x, table = "table_1", reported = TRUE)),
+               c("summary.replication","replication.table"))
+
+  # Test table replication reported
+  expect_equal(class(summary(x, table = "table_1", registered = TRUE)),
+               c("summary.replication","replication.table"))
+
+  # Test name in a seinsible format
+  expect_equal(class(summary(x, table = "Table 2", reported = TRUE)),
+               c("summary.replication","replication.table"))
+
+  # Test script for table replication
+  expect_equal(class(summary(x, script = TRUE)),
+               c("summary.replication","replication.script"))
+
+  # Test script for table replication
+  expect_equal(class(summary(x, table = "table_1", script = TRUE)),
+               c("summary.replication","replication.script"))
 
 })
