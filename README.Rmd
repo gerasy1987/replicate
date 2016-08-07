@@ -2,8 +2,33 @@
 output:
   github_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 4
 ---
+
+<style type="text/css">
+
+body{ /* Normal  */
+   font-size: 14px;
+}
+td {  /* Table  */
+   font-size: 10px;
+}
+h1 { /* Header 1 */
+ font-size: 28px;
+}
+h2 { /* Header 2 */
+ font-size: 22px;
+}
+h3 { /* Header 3 */
+ font-size: 18px;
+}
+code.r{ /* Code block */
+  font-size: 12px;
+}
+pre { /* Code block */
+  font-size: 12px
+}
+</style>
 
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, error=FALSE, eval = FALSE, echo = TRUE)
@@ -35,7 +60,7 @@ ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr",
 
 _The function takes main parts of replication object as an arguments and returns the replication class object. (see [create\_replication.R](https://github.com/gerasy1987/replicate/blob/master/create_replication.R) for code)._
 
-The function takes 6 main arguments arguments:
+The function takes 6 main arguments arguments (defaults are given in parentheses if specified):
   
   - `description_list`: List of miscellaneous descriptions of replication. *Example*:
 ```{r chunk_1}
@@ -53,8 +78,8 @@ description_list =
   )
 ```
     
-  - `packages = NULL`: Character vector of packages required for replication in `[R]`. Defaults to `NULL`.
-  - `project_path = NULL`: Character string giving the path to the directory, where function and replication scripts are stored. Defaults to `NULL` (which is reasonable if RStudio project is used).
+  - `packages` (`= NULL`): Character vector of packages required for replication in `[R]`.
+  - `project_path` (`= NULL`): Character string giving the path to the directory, where function and replication scripts are stored. Defaults to `NULL`, which is reasonable if RStudio project is used.
   - `data_list`: A named list of data-frames used for the replication. *Example*:
     
 ```{r chunk_2}
@@ -66,8 +91,8 @@ data_list = list(data_admin = data_admin, data_individual = data_individual)
     
 There are also 2 additional arguments:
   
-  - `quietly = FALSE`: Logical. Whether the creation of replication should go without any messages printed to `console`. Defaults to `FALSE`.
-  - `checks = TRUE`: Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed. Defaults to `TRUE`.
+  - `quietly` (`= FALSE`): Logical. Whether the creation of replication should go without any messages printed to `console`.
+  - `checks` (`= TRUE`): Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed.
 
 ## `summary()`
 
@@ -76,11 +101,11 @@ _The function takes replication object and either returns miscellaneous descript
 The function takes the following arguments:
   
   - `object`: Object of class `replication` created by `create_replication()`.
-  - `table = NULL`: Character string specifying the table to be replicated. The table name should include number of the table as specified in `replication_script_path` file and the word "table".
-  - `reported = TRUE`: Logical. Whether to show columns with specifications reported in the paper.
-  - `registered = FALSE`: Logical. Whether to show columns with specifications registered in PAP.
-  - `desc = FALSE`: *To be implemented...*
-  - `data_desc = FALSE`: *To be implemented...*
+  - `table` (`= NULL`): Character string specifying the table to be replicated. The table name should include number of the table as specified in `replication_script_path` file and the word "table".
+  - `reported` (`= FALSE`): Logical. Whether to show columns with specifications reported in the paper.
+  - `registered` (`= FALSE`): Logical. Whether to show columns with specifications registered in PAP.
+  - `script` (`= FALSE`): Logical. Whether to print the script to replicate the results of the study. If `table = NULL`, then returns preamble which includes all the functions and packages required for replication. If `table != NULL`, then returns preamble and the code for replication of the specified table.
+  - `desc` (`= FALSE`): *To be implemented...*
 
 ## Examples
 

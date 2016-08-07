@@ -5,8 +5,35 @@
     -   [Examples](#examples)
         -   [Use of `create_replication()`](#use-of-create_replication)
         -   [Use of `summary.replication()`](#use-of-summary.replication)
+            -   [Genearal summary](#genearal-summary)
+            -   [Table summary](#table-summary)
+            -   [Replication script](#replication-script)
 -   [TODO](#todo)
 
+<style type="text/css">
+
+body{ /* Normal  */
+   font-size: 14px;
+}
+td {  /* Table  */
+   font-size: 10px;
+}
+h1 { /* Header 1 */
+ font-size: 28px;
+}
+h2 { /* Header 2 */
+ font-size: 22px;
+}
+h3 { /* Header 3 */
+ font-size: 18px;
+}
+code.r{ /* Code block */
+  font-size: 12px;
+}
+pre { /* Code block */
+  font-size: 12px
+}
+</style>
 ``` r
 ipak <- function(pkg, quietly = FALSE) {
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
@@ -35,7 +62,7 @@ Description of the replicate functionality:
 
 *The function takes main parts of replication object as an arguments and returns the replication class object. (see [create\_replication.R](https://github.com/gerasy1987/replicate/blob/master/create_replication.R) for code).*
 
-The function takes 6 main arguments arguments:
+The function takes 6 main arguments arguments (defaults are given in parentheses if specified):
 
 -   `description_list`: List of miscellaneous descriptions of replication. *Example*:
 
@@ -54,8 +81,8 @@ description_list =
   )
 ```
 
--   `packages = NULL`: Character vector of packages required for replication in `[R]`. Defaults to `NULL`.
--   `project_path = NULL`: Character string giving the path to the directory, where function and replication scripts are stored. Defaults to `NULL` (which is reasonable if RStudio project is used).
+-   `packages` (`= NULL`): Character vector of packages required for replication in `[R]`.
+-   `project_path` (`= NULL`): Character string giving the path to the directory, where function and replication scripts are stored. Defaults to `NULL`, which is reasonable if RStudio project is used.
 -   `data_list`: A named list of data-frames used for the replication. *Example*:
 
 ``` r
@@ -67,8 +94,8 @@ data_list = list(data_admin = data_admin, data_individual = data_individual)
 
 There are also 2 additional arguments:
 
--   `quietly = FALSE`: Logical. Whether the creation of replication should go without any messages printed to `console`. Defaults to `FALSE`.
--   `checks = TRUE`: Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed. Defaults to `TRUE`.
+-   `quietly` (`= FALSE`): Logical. Whether the creation of replication should go without any messages printed to `console`.
+-   `checks` (`= TRUE`): Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed.
 
 `summary()`
 -----------
@@ -78,11 +105,11 @@ There are also 2 additional arguments:
 The function takes the following arguments:
 
 -   `object`: Object of class `replication` created by `create_replication()`.
--   `table = NULL`: Character string specifying the table to be replicated. The table name should include number of the table as specified in `replication_script_path` file and the word "table".
--   `reported = TRUE`: Logical. Whether to show columns with specifications reported in the paper.
--   `registered = FALSE`: Logical. Whether to show columns with specifications registered in PAP.
--   `desc = FALSE`: *To be implemented...*
--   `data_desc = FALSE`: *To be implemented...*
+-   `table` (`= NULL`): Character string specifying the table to be replicated. The table name should include number of the table as specified in `replication_script_path` file and the word "table".
+-   `reported` (`= FALSE`): Logical. Whether to show columns with specifications reported in the paper.
+-   `registered` (`= FALSE`): Logical. Whether to show columns with specifications registered in PAP.
+-   `script` (`= FALSE`): Logical. Whether to print the script to replicate the results of the study. If `table = NULL`, then returns preamble which includes all the functions and packages required for replication. If `table != NULL`, then returns preamble and the code for replication of the specified table.
+-   `desc` (`= FALSE`): *To be implemented...*
 
 Examples
 --------
@@ -234,7 +261,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.073 85.013 [1.073]   0.000
+    1 intercept   85.013     1.058 85.013 [1.058]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -244,7 +271,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.621 84.937 [0.621]   0.000
+    1 intercept   84.937     0.657 84.937 [0.657]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -260,7 +287,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.860 -0.368 [0.860]   1.329
+    1    intercept   -0.368     0.830 -0.368 [0.830]   1.340
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -270,7 +297,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.712  0.711 [0.712]   0.324
+    1 intercept    0.711     0.664  0.711 [0.664]   0.290
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -280,7 +307,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.101 -0.215 [1.101]   1.154
+    1    intercept   -0.215     1.120 -0.215 [1.120]   1.151
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -294,7 +321,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.250  0.324 [1.250]   0.797
+    1    intercept    0.324     1.220  0.324 [1.220]   0.792
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -306,7 +333,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.712  0.711 [0.712]   0.324
+    1 intercept    0.711     0.664  0.711 [0.664]   0.290
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -316,7 +343,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.486  0.676 [1.486]   0.652
+    1    intercept    0.676     1.465  0.676 [1.465]   0.647
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
