@@ -14,6 +14,7 @@ create_replication <- function(description_list,
   requireNamespace("dplyr", quietly = TRUE)
   requireNamespace("broom", quietly = TRUE)
   requireNamespace("magrittr", quietly = TRUE)
+  requireNamespace("readr", quietly = TRUE)
 
   # checks
   if (!(class(packages) %in% c("NULL", "character")))
@@ -28,6 +29,9 @@ create_replication <- function(description_list,
                                               replication_script_path)))))
     stop("Either function or replication calls script name provided incorrectly, ",
          "or do not exist in specified project directory path.")
+
+  # empty lists
+  replication <- functions_list <- table_list <- environment_list <- list()
 
   # check packages
   if (!is.null(packages)) {
@@ -48,12 +52,19 @@ create_replication <- function(description_list,
     }
   }
 
-  # empty lists
-  replication <- functions_list <- table_list <- environment_list <- list()
+  replication$packages <- packages
 
   # read data
-  for (i in 1:length(data_list))
-    environment_list[[names(data_list)[i]]] <- dplyr::as.tbl( data_list[[i]] )
+  if (!is.list(class(data_list))) data_list <- as.list(data_list)
+  if (is.null(names(data_list))) stop("Please provide names for each object of data_list argument.")
+  for (i in 1:length(data_list)) {
+    if (all(sapply(data_list, class) %in% c("data.frame","tbl"))){
+      environment_list[[names(data_list)[i]]] <- dplyr::as.tbl( data_list[[i]] )
+    } else if (all(sapply(data_list, class) %in% c("character"))) {
+      environment_list[[names(data_list)[i]]] <-
+        dplyr::as.tbl( readr::read_file(paste0(project_path,data_list[[i]])) ) # need to test this
+    }
+  }
 
   replication$data <- data_list
 
@@ -97,19 +108,15 @@ create_replication <- function(description_list,
     "Miscellany:\n" %>%
     add_study_description(pattern = "^(?=.*nam)(?=.*stud).*$",
                           description_text = "This is a replication of the ",
-                          collapse_pattern = " and ",
                           list = description_list) %>%
     add_study_description(pattern = c("^(?=.*auth)(?=.*stud).*$",
                                       "^(?=.*affil)(?=.*stud).*$"),
                           description_text = "The original study is conducted by ",
-                          collapse_pattern = " and ",
-                          ends_with = ". ",
                           list = description_list,
                           merge_by = "from") %>%
     add_study_description(pattern = c("^(?=.*auth)(?=.*rep).*$",
                                       "^(?=.*affil)(?=.*rep).*$"),
                           description_text = "The replication is conducted by ",
-                          collapse_pattern = " and ",
                           ends_with = ".\n",
                           list = description_list,
                           merge_by = "from") %>%
@@ -121,22 +128,18 @@ create_replication <- function(description_list,
 
   technical_misc <-
     "\nTechnical:\n" %>%
-    add_tech_description(type = "dataset",
-                         collapse_pattern = ", ",
-                         ends_with = ". ",
+    add_tech_description(type_of_object = "dataset",
                          list = data_list,
                          add_stat = function(x) paste(dim(x)[1], "obs. of",
                                                       dim(x)[2], "variables")) %>%
-    add_tech_description(type = "custom function",
-                         collapse_pattern = ", ",
-                         ends_with = ". ",
-                         list = functions_list,
-                         add_stat = NULL) %>%
-    add_tech_description(type = "table replication",
-                         collapse_pattern = ", ",
+    add_tech_description(type_of_object = "custom function",
+                         list = functions_list) %>%
+    add_tech_description(type_of_object = "table replication",
+                         list = table_list) %>%
+    add_tech_description(type_of_object = "package",
                          ends_with = ".",
-                         list = table_list,
-                         add_stat = NULL)
+                         middle_part = " required for the replication: ",
+                         list = as.list(packages) %>% `names<-`(packages))
 
   attr(replication, which = "misc") <- list(study = study_misc,
                                             tech = technical_misc)
@@ -174,7 +177,7 @@ create_replication <- function(description_list,
 add_study_description <- function(starting_description,
                                   pattern,
                                   description_text,
-                                  collapse_pattern = "and",
+                                  collapse_pattern = " and ",
                                   ends_with = ". ",
                                   list,
                                   merge_by = NULL) {
@@ -213,15 +216,16 @@ add_study_description <- function(starting_description,
 
 #' @export
 add_tech_description <- function(starting_description,
-                                 type,
-                                 collapse_pattern,
-                                 ends_with,
+                                 type_of_object,
+                                 middle_part = " provided: ",
+                                 collapse_pattern = ", ",
+                                 ends_with = ". ",
                                  list,
                                  add_stat = NULL) {
   part1 <- paste0(starting_description,
                   ifelse(length(list) == 1, "There is ", "There are "),
-                  length(list), " ", type,
-                  ifelse(length(list) == 1, "", "s"), " provided: ")
+                  length(list), " ", type_of_object,
+                  ifelse(length(list) == 1, "", "s"), middle_part)
   if (!is.null(add_stat) & class(add_stat) == "function"){
     part2 <-
       paste0(paste(paste0(names(list), " (",
@@ -236,7 +240,7 @@ add_tech_description <- function(starting_description,
 }
 
 #' @export
-ipak <- function(pkg, quietly) {
+ipak <- function(pkg, quietly = FALSE) {
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
   if (length(new.pkg))
     install.packages(new.pkg, dependencies = TRUE)

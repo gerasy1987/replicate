@@ -11,16 +11,16 @@ analyses <- function(DV,
                      status = c(TRUE, TRUE, TRUE)) {
 
   # required packages
-  requireNamespace("plyr", quietly = TRUE)
-  requireNamespace("dplyr", quietly = TRUE)
-  requireNamespace("broom", quietly = TRUE)
-  requireNamespace("Hmisc", quietly = TRUE)
-  requireNamespace("lfe", quietly = TRUE)
-  requireNamespace("multiwayvcov", quietly = TRUE)
-  requireNamespace("lmtest", quietly = TRUE)
-  # utils::suppressForeignCheck(c("printout", "estimate","std.error", "term"))
+  suppressMessages(stopifnot(require(plyr)))
+  suppressMessages(stopifnot(require(dplyr)))
+  suppressMessages(stopifnot(require(broom)))
+  suppressMessages(stopifnot(require(Hmisc)))
+  suppressMessages(stopifnot(require(lfe)))
+  suppressMessages(stopifnot(require(multiwayvcov)))
+  suppressMessages(stopifnot(require(lmtest)))
 
-  if (!is.null(FE) & model != "lm") stop("Function does not support FE for other than OLS models")
+  if (!is.null(FE) & model != "lm")
+    stop("Function does not support FE for other than OLS models")
 
   # generate the formula to use in model.frame to produce nice data frame
   frame_formula <-
@@ -192,14 +192,13 @@ mgsub <- function(pattern, replacement, x, ...) {
   result
 }
 
-
 pfround <- function (x, digits) {
   print(fround(x, digits), quote = FALSE)
 }
 
 set_seed <- function(.seed = 12345, .parallel = FALSE) {
   # required packages
-  requireNamespace("mosaic", quietly = TRUE)
+  suppressMessages(stopifnot(require(mosaic)))
 
   if (.parallel) mosaic::set.rseed(seed = .seed)
   else set.seed(seed = .seed)

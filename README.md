@@ -116,10 +116,15 @@ source("summary.R")
     ## The aim of this study is to test the create_replication() functionality. This is the first attempt at creatreplication class of objects in [R] for systematic storage and access to study replication materials.
     ## 
     ## Technical:
-    ## There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. 
+    ## There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. There are 9 packages required for the replication: plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr. 
     ## 
     ## [[1]]
-    ## [[1]]$data_admin
+    ## [1] "plyr"         "dplyr"        "broom"        "Hmisc"       
+    ## [5] "lfe"          "multiwayvcov" "lmtest"       "wakefield"   
+    ## [9] "magrittr"    
+    ## 
+    ## [[2]]
+    ## [[2]]$data_admin
     ## # A tibble: 50 x 11
     ##    village_id   age school_grade   income        iq   height treat
     ## *       <int> <dbl>        <dbl>    <dbl>     <dbl>    <dbl> <dbl>
@@ -136,7 +141,7 @@ source("summary.R")
     ## # ... with 40 more rows, and 4 more variables: turnout <dbl>, urban <int>,
     ## #   rural <int>, population <int>
     ## 
-    ## [[1]]$data_individual
+    ## [[2]]$data_individual
     ## # A tibble: 1,000 x 12
     ##     vote   age ethnicity  male female school_grade   income      iq
     ##    <int> <int>    <fctr> <int>  <int>        <dbl>    <dbl>   <dbl>
@@ -154,37 +159,39 @@ source("summary.R")
     ## #   village_id <int>, ind_id <int>
     ## 
     ## 
-    ## [[2]]
-    ## [[2]]$analyses
-    ## [1] "analyses <- function(DV, treat, covs = NULL, heterogenous = NULL, subset = NULL, FE = NULL, cluster = NULL, IPW = NULL, data, model = \"lm\", status = c(TRUE, TRUE, TRUE)) {\n    requireNamespace(\"plyr\", quietly = TRUE)\n    requireNamespace(\"dplyr\", quietly = TRUE)\n    requireNamespace(\"broom\", quietly = TRUE)\n    requireNamespace(\"Hmisc\", quietly = TRUE)\n    requireNamespace(\"lfe\", quietly = TRUE)\n    requireNamespace(\"multiwayvcov\", quietly = TRUE)\n    requireNamespace(\"lmtest\", quietly = TRUE)\n    if (!is.null(FE) & model != \"lm\") \n        stop(\"Function does not support FE for other than OLS models\")\n    frame_formula <- stats::as.formula(paste(DV, \"~\", paste(c(treat, covs, FE, cluster, IPW, heterogenous), collapse = \" + \")))\n    if (is.null(heterogenous)) {\n        main_formula <- paste(c(treat, covs), collapse = \" + \")\n    }\n    else {\n        main_formula <- paste(c(treat, paste0(treat, \":\", heterogenous), heterogenous, covs), collapse = \" + \")\n    }\n    main_formula <- paste(DV, \"~\", main_formula)\n    FE_formula <- ifelse(is.null(FE), 0, paste(FE, collapse = \"+\"))\n    cluster_formula <- ifelse(is.null(cluster), 0, paste(cluster, collapse = \"+\"))\n    fit_formula <- stats::as.formula(paste(main_formula, \"|\", FE_formula, \"|\", 0, \"|\", cluster_formula))\n    frame_df <- dplyr::filter_(.data = data, .dots = subset)\n    frame_df <- dplyr::filter_(.data = frame_df, .dots = paste(paste0(\"!is.na(\", c(treat, DV, FE, cluster, IPW, heterogenous), \")\"), collapse = \" & \"))\n    frame_df <- stats::model.frame(frame_formula, data = frame_df)\n    if (length(FE) > 1) \n        frame_df[, FE] <- (plyr::colwise(as.factor))(frame_df[, FE])\n    if (length(FE) == 1) \n        frame_df[, FE] <- as.factor(frame_df[, FE])\n    if (model == \"lm\") {\n        if (is.null(IPW)) {\n            fit <- lfe::felm(formula = fit_formula, data = frame_df)\n        }\n        else {\n            fit <- lfe::felm(formula = fit_formula, data = frame_df, weights = unlist(frame_df[, IPW]))\n        }\n    }\n    else if (model == \"logit\") {\n        if (is.null(IPW)) {\n            fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, family = binomial(link = \"logit\")))\n        }\n        else {\n            fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, weights = unlist(frame_df[, IPW]), family = binomial(link = \"logit\")))\n        }\n        if (!is.null(cluster)) {\n            fit <- lmtest::coeftest(x = fit, vcov = multiwayvcov::cluster.vcov(model = fit, cluster = frame_df[, cluster]))\n        }\n    }\n    col_names <- c(\"term\", \"estimate\", \"std.error\", \"p.value\")\n    if (!is.null(FE)) {\n        icpt <- unname(plyr::name_rows(lfe::getfe(fit, ef = function(gamma, addnames) absorb(gamma = gamma, addnames = addnames, .FE = frame_df[, FE]), se = T, bN = 1000, cluster = TRUE)))\n        icpt <- cbind(icpt[c(5, 1, 4)], pval = 2 * stats::pt(unlist(icpt[1])/unlist(icpt[4]), df = suppressWarnings(broom::glance(fit)[, \"df\"]), lower.tail = FALSE))\n        colnames(icpt) <- col_names\n        estout <- rbind(icpt, suppressWarnings(broom::tidy(fit)[, col_names]))\n    }\n    else {\n        estout <- broom::tidy(fit)[, col_names]\n        estout[1, 1] <- \"intercept\"\n    }\n    out <- dplyr::mutate(estout, printout = paste0(fround(estimate, digits = 3), \" [\", fround(std.error, digits = 3), \"]\"), estimate = round(estimate, digits = 3), std.error = round(std.error, digits = 3), p.value = round(p.value, digits = 3))\n    out <- dplyr::select(.data = out, term, estimate, std.error, printout, p.value)\n    list(estimates = out, stat = c(adj.r.squared = ifelse(model == \"lm\", fround(broom::glance(fit)$adj.r.squared, digits = 3), NA), n_obs = fround(nrow(frame_df), digits = 0)), model_spec = c(HETEROGENOUS = ifelse(!is.null(heterogenous), paste(heterogenous, collapse = \" \"), NA), FE = ifelse(!is.null(FE), paste(FE, collapse = \" \"), \"no\"), CLUSTER = ifelse(!is.null(cluster), paste(cluster, collapse = \" \"), \"no\"), IPW = ifelse(!is.null(IPW), paste(IPW, collapse = \" \"), \"no\")), model_status = c(R = status[1], \n        S = status[2], P = status[3]))\n}"
+    ## [[3]]
+    ## [[3]]$analyses
+    ## [1] "analyses <- function(DV, treat, covs = NULL, heterogenous = NULL, subset = NULL, FE = NULL, cluster = NULL, IPW = NULL, data, model = \"lm\", status = c(TRUE, TRUE, TRUE)) {\n    suppressMessages(stopifnot(require(plyr)))\n    suppressMessages(stopifnot(require(dplyr)))\n    suppressMessages(stopifnot(require(broom)))\n    suppressMessages(stopifnot(require(Hmisc)))\n    suppressMessages(stopifnot(require(lfe)))\n    suppressMessages(stopifnot(require(multiwayvcov)))\n    suppressMessages(stopifnot(require(lmtest)))\n    if (!is.null(FE) & model != \"lm\") \n        stop(\"Function does not support FE for other than OLS models\")\n    frame_formula <- stats::as.formula(paste(DV, \"~\", paste(c(treat, covs, FE, cluster, IPW, heterogenous), collapse = \" + \")))\n    if (is.null(heterogenous)) {\n        main_formula <- paste(c(treat, covs), collapse = \" + \")\n    }\n    else {\n        main_formula <- paste(c(treat, paste0(treat, \":\", heterogenous), heterogenous, covs), collapse = \" + \")\n    }\n    main_formula <- paste(DV, \"~\", main_formula)\n    FE_formula <- ifelse(is.null(FE), 0, paste(FE, collapse = \"+\"))\n    cluster_formula <- ifelse(is.null(cluster), 0, paste(cluster, collapse = \"+\"))\n    fit_formula <- stats::as.formula(paste(main_formula, \"|\", FE_formula, \"|\", 0, \"|\", cluster_formula))\n    frame_df <- dplyr::filter_(.data = data, .dots = subset)\n    frame_df <- dplyr::filter_(.data = frame_df, .dots = paste(paste0(\"!is.na(\", c(treat, DV, FE, cluster, IPW, heterogenous), \")\"), collapse = \" & \"))\n    frame_df <- stats::model.frame(frame_formula, data = frame_df)\n    if (length(FE) > 1) \n        frame_df[, FE] <- (plyr::colwise(as.factor))(frame_df[, FE])\n    if (length(FE) == 1) \n        frame_df[, FE] <- as.factor(frame_df[, FE])\n    if (model == \"lm\") {\n        if (is.null(IPW)) {\n            fit <- lfe::felm(formula = fit_formula, data = frame_df)\n        }\n        else {\n            fit <- lfe::felm(formula = fit_formula, data = frame_df, weights = unlist(frame_df[, IPW]))\n        }\n    }\n    else if (model == \"logit\") {\n        if (is.null(IPW)) {\n            fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, family = binomial(link = \"logit\")))\n        }\n        else {\n            fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, weights = unlist(frame_df[, IPW]), family = binomial(link = \"logit\")))\n        }\n        if (!is.null(cluster)) {\n            fit <- lmtest::coeftest(x = fit, vcov = multiwayvcov::cluster.vcov(model = fit, cluster = frame_df[, cluster]))\n        }\n    }\n    col_names <- c(\"term\", \"estimate\", \"std.error\", \"p.value\")\n    if (!is.null(FE)) {\n        icpt <- unname(plyr::name_rows(lfe::getfe(fit, ef = function(gamma, addnames) absorb(gamma = gamma, addnames = addnames, .FE = frame_df[, FE]), se = T, bN = 1000, cluster = TRUE)))\n        icpt <- cbind(icpt[c(5, 1, 4)], pval = 2 * stats::pt(unlist(icpt[1])/unlist(icpt[4]), df = suppressWarnings(broom::glance(fit)[, \"df\"]), lower.tail = FALSE))\n        colnames(icpt) <- col_names\n        estout <- rbind(icpt, suppressWarnings(broom::tidy(fit)[, col_names]))\n    }\n    else {\n        estout <- broom::tidy(fit)[, col_names]\n        estout[1, 1] <- \"intercept\"\n    }\n    out <- dplyr::mutate(estout, printout = paste0(fround(estimate, digits = 3), \" [\", fround(std.error, digits = 3), \"]\"), estimate = round(estimate, digits = 3), std.error = round(std.error, digits = 3), p.value = round(p.value, digits = 3))\n    out <- dplyr::select(.data = out, term, estimate, std.error, printout, p.value)\n    list(estimates = out, stat = c(adj.r.squared = ifelse(model == \"lm\", fround(broom::glance(fit)$adj.r.squared, digits = 3), NA), n_obs = fround(nrow(frame_df), digits = 0)), model_spec = c(HETEROGENOUS = ifelse(!is.null(heterogenous), paste(heterogenous, collapse = \" \"), NA), FE = ifelse(!is.null(FE), paste(FE, collapse = \" \"), \"no\"), CLUSTER = ifelse(!is.null(cluster), paste(cluster, collapse = \" \"), \"no\"), IPW = ifelse(!is.null(IPW), paste(IPW, collapse = \" \"), \"no\")), model_status = c(R = status[1], \n        S = status[2], P = status[3]))\n}"
     ## 
-    ## [[2]]$absorb
+    ## [[3]]$absorb
     ## [1] "absorb <- function(gamma, addnames, .FE) {\n    ws <- table(.FE, useNA = \"no\")\n    icpt <- wtd_mean(gamma, weights = ws)\n    result <- c(icpt)\n    if (addnames) {\n        names(result) <- \"intercept\"\n        attr(result, \"extra\") <- list(fe = factor(\"icpt\"), obs = factor(length(.FE)))\n    }\n    result\n}"
     ## 
-    ## [[2]]$fround
+    ## [[3]]$fround
     ## [1] "fround <- function(x, digits) {\n    format(round(x, digits), nsmall = digits)\n}"
     ## 
-    ## [[2]]$mgsub
+    ## [[3]]$mgsub
     ## [1] "mgsub <- function(pattern, replacement, x, ...) {\n    if (length(pattern) != length(replacement)) {\n        stop(\"pattern and replacement do not have the same length.\")\n    }\n    result <- x\n    for (i in 1:length(pattern)) {\n        result <- gsub(pattern[i], replacement[i], result, ...)\n    }\n    result\n}"
     ## 
-    ## [[2]]$pfround
+    ## [[3]]$pfround
     ## [1] "pfround <- function(x, digits) {\n    print(fround(x, digits), quote = FALSE)\n}"
     ## 
-    ## [[2]]$set_seed
-    ## [1] "set_seed <- function(.seed = 12345, .parallel = FALSE) {\n    requireNamespace(\"mosaic\", quietly = TRUE)\n    if (.parallel) \n        mosaic::set.rseed(seed = .seed)\n    else set.seed(seed = .seed)\n}"
+    ## [[3]]$set_seed
+    ## [1] "set_seed <- function(.seed = 12345, .parallel = FALSE) {\n    suppressMessages(stopifnot(require(mosaic)))\n    if (.parallel) \n        mosaic::set.rseed(seed = .seed)\n    else set.seed(seed = .seed)\n}"
     ## 
-    ## [[2]]$wtd_mean
+    ## [[3]]$wtd_mean
     ## [1] "wtd_mean <- function(x, weights = NULL, normwt = \"ignored\", na.rm = TRUE) {\n    if (!length(weights)) \n        return(mean(x, na.rm = na.rm))\n    if (na.rm) {\n        s <- !is.na(x + weights)\n        x <- x[s]\n        weights <- weights[s]\n    }\n    return(sum(weights * x)/sum(weights))\n}"
     ## 
     ## 
-    ## [[3]]
-    ## [[3]]$table_1
+    ## [[4]]
+    ## [[4]]$table_1
     ## [1] "mapply(FUN = analyses, MoreArgs = list(DV = \"school_grade\", treat = \"treat\", FE = \"ethnicity\", data = data_individual), covs = list(column_1 = c(\"male\", \"income\"), column_1_rep = c(\"male\", \"income\"), column_2 = NULL, column_2_rep = NULL), heterogenous = list(NULL, \"iq\", NULL, \"iq\"), subset = list(\"iq >= 50\", NULL, \"iq >= 50\", NULL), status = list(c(F, T, T), c(T, T, F), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)"
     ## 
-    ## [[3]]$table_2
+    ## [[4]]$table_2
     ## [1] "mapply(FUN = analyses, MoreArgs = list(DV = \"turnout\", treat = \"treat\", FE = \"urban\", data = data_admin), covs = list(column_1 = c(\"age\", \"school_grade\"), column_1_rep = c(\"age\", \"school_grade\"), column_2 = c(\"height\", \"income\"), column_3 = c(\"age\", \"school_grade\", \"height\", \"income\"), column_3_rep = c(\"age\", \"school_grade\", \"height\", \"income\")), heterogenous = list(NULL, \"iq\", NULL, NULL, \"iq\"), subset = list(\"iq >= 50\", NULL, \"iq >= 50\", \"iq >= 50\", NULL), status = list(c(F, T, T), c(T, T, F), \n    c(T, T, T), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)"
 
 ### Use of `summary.replication()`
+
+#### Genearal summary
 
 ``` r
 summary(x)
@@ -195,9 +202,11 @@ summary(x)
     ## 
     ## Abstract:
     ## The aim of this study is to test the create_replication() functionality. This is the first attempt at creatreplication class of objects in [R] for systematic storage and access to study replication materials.
-    ## 
+    ##  
     ## Technical:
-    ## There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2.
+    ## There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. There are 9 packages required for the replication: plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr.
+
+#### Table summary
 
 ``` r
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
@@ -210,7 +219,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     ## column_1 
     ## 
     ##        term estimate std.error       printout p.value
-    ## 1 intercept   85.013     1.027 85.013 [1.027]   0.000
+    ## 1 intercept   85.013     1.044 85.013 [1.044]   0.000
     ## 2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     ## 3      male   -0.298     0.924 -0.298 [0.924]   0.747
     ## 4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -220,7 +229,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     ## column_2 
     ## 
     ##        term estimate std.error       printout p.value
-    ## 1 intercept   84.937     0.644 84.937 [0.644]   0.000
+    ## 1 intercept   84.937     0.643 84.937 [0.643]   0.000
     ## 2     treat   -1.076     0.921 -1.076 [0.921]   0.243
     ## 
     ## adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no
@@ -236,7 +245,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_1 
     ## 
     ##           term estimate std.error       printout p.value
-    ## 1    intercept   -0.368     0.870 -0.368 [0.870]   1.325
+    ## 1    intercept   -0.368     0.822 -0.368 [0.822]   1.343
     ## 2        treat    0.072     0.058  0.072 [0.058]   0.219
     ## 3          age   -0.004     0.009 -0.004 [0.009]   0.636
     ## 4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -246,7 +255,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_2 
     ## 
     ##        term estimate std.error       printout p.value
-    ## 1 intercept    0.711     0.665  0.711 [0.665]   0.291
+    ## 1 intercept    0.711     0.673  0.711 [0.673]   0.297
     ## 2     treat    0.051     0.057  0.051 [0.057]   0.380
     ## 3    height   -0.001     0.004 -0.001 [0.004]   0.890
     ## 4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -256,7 +265,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_3 
     ## 
     ##           term estimate std.error       printout p.value
-    ## 1    intercept   -0.215     1.137 -0.215 [1.137]   1.149
+    ## 1    intercept   -0.215     1.134 -0.215 [1.134]   1.149
     ## 2        treat    0.068     0.060  0.068 [0.060]   0.262
     ## 3          age   -0.004     0.009 -0.004 [0.009]   0.690
     ## 4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -270,7 +279,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_1_rep 
     ## 
     ##           term estimate std.error       printout p.value
-    ## 1    intercept    0.324     1.200  0.324 [1.200]   0.789
+    ## 1    intercept    0.324     1.221  0.324 [1.221]   0.792
     ## 2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     ## 3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     ## 4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -282,7 +291,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_2 
     ## 
     ##        term estimate std.error       printout p.value
-    ## 1 intercept    0.711     0.665  0.711 [0.665]   0.291
+    ## 1 intercept    0.711     0.673  0.711 [0.673]   0.297
     ## 2     treat    0.051     0.057  0.051 [0.057]   0.380
     ## 3    height   -0.001     0.004 -0.001 [0.004]   0.890
     ## 4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -292,7 +301,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## column_3_rep 
     ## 
     ##           term estimate std.error       printout p.value
-    ## 1    intercept    0.676     1.482  0.676 [1.482]   0.651
+    ## 1    intercept    0.676     1.539  0.676 [1.539]   0.663
     ## 2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     ## 3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     ## 4          age   -0.002     0.009 -0.002 [0.009]   0.820
@@ -302,6 +311,284 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     ## 8     treat:iq    0.009     0.015  0.009 [0.015]   0.571
     ## 
     ## adj.r.squared = -0.098, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no
+
+#### Replication script
+
+``` r
+summary(x, script = TRUE)
+```
+
+    ## This is preamble code.
+    ## Run it before the replication of your first table in the study.
+
+    ipak <- function (pkg, quietly = FALSE) 
+    {
+        new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+        if (length(new.pkg)) 
+            install.packages(new.pkg, dependencies = TRUE)
+        loaded_packages <- sapply(pkg, require, character.only = TRUE)
+        if (any(!loaded_packages)) 
+            stop(paste0("The following packages required for replication failed to load: ", 
+                paste0(names(pkg)[!pkg], collapse = ", "), ". This can cause failure to replicate the study."))
+        if (all(loaded_packages) & !quietly) 
+            cat(paste0("Succesfully installed and/or loaded all packages required for replication: ", 
+                paste0(pkg, collapse = ", "), ".\n\n"))
+    }
+
+    ipak(c("plyr", "dplyr", "broom", "Hmisc", "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"))
+
+    analyses <- function(DV, treat, covs = NULL, heterogenous = NULL, subset = NULL, FE = NULL, cluster = NULL, IPW = NULL, data, model = "lm", status = c(TRUE, TRUE, TRUE)) {
+        suppressMessages(stopifnot(require(plyr)))
+        suppressMessages(stopifnot(require(dplyr)))
+        suppressMessages(stopifnot(require(broom)))
+        suppressMessages(stopifnot(require(Hmisc)))
+        suppressMessages(stopifnot(require(lfe)))
+        suppressMessages(stopifnot(require(multiwayvcov)))
+        suppressMessages(stopifnot(require(lmtest)))
+        if (!is.null(FE) & model != "lm") 
+            stop("Function does not support FE for other than OLS models")
+        frame_formula <- stats::as.formula(paste(DV, "~", paste(c(treat, covs, FE, cluster, IPW, heterogenous), collapse = " + ")))
+        if (is.null(heterogenous)) {
+            main_formula <- paste(c(treat, covs), collapse = " + ")
+        }
+        else {
+            main_formula <- paste(c(treat, paste0(treat, ":", heterogenous), heterogenous, covs), collapse = " + ")
+        }
+        main_formula <- paste(DV, "~", main_formula)
+        FE_formula <- ifelse(is.null(FE), 0, paste(FE, collapse = "+"))
+        cluster_formula <- ifelse(is.null(cluster), 0, paste(cluster, collapse = "+"))
+        fit_formula <- stats::as.formula(paste(main_formula, "|", FE_formula, "|", 0, "|", cluster_formula))
+        frame_df <- dplyr::filter_(.data = data, .dots = subset)
+        frame_df <- dplyr::filter_(.data = frame_df, .dots = paste(paste0("!is.na(", c(treat, DV, FE, cluster, IPW, heterogenous), ")"), collapse = " & "))
+        frame_df <- stats::model.frame(frame_formula, data = frame_df)
+        if (length(FE) > 1) 
+            frame_df[, FE] <- (plyr::colwise(as.factor))(frame_df[, FE])
+        if (length(FE) == 1) 
+            frame_df[, FE] <- as.factor(frame_df[, FE])
+        if (model == "lm") {
+            if (is.null(IPW)) {
+                fit <- lfe::felm(formula = fit_formula, data = frame_df)
+            }
+            else {
+                fit <- lfe::felm(formula = fit_formula, data = frame_df, weights = unlist(frame_df[, IPW]))
+            }
+        }
+        else if (model == "logit") {
+            if (is.null(IPW)) {
+                fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, family = binomial(link = "logit")))
+            }
+            else {
+                fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, weights = unlist(frame_df[, IPW]), family = binomial(link = "logit")))
+            }
+            if (!is.null(cluster)) {
+                fit <- lmtest::coeftest(x = fit, vcov = multiwayvcov::cluster.vcov(model = fit, cluster = frame_df[, cluster]))
+            }
+        }
+        col_names <- c("term", "estimate", "std.error", "p.value")
+        if (!is.null(FE)) {
+            icpt <- unname(plyr::name_rows(lfe::getfe(fit, ef = function(gamma, addnames) absorb(gamma = gamma, addnames = addnames, .FE = frame_df[, FE]), se = T, bN = 1000, cluster = TRUE)))
+            icpt <- cbind(icpt[c(5, 1, 4)], pval = 2 * stats::pt(unlist(icpt[1])/unlist(icpt[4]), df = suppressWarnings(broom::glance(fit)[, "df"]), lower.tail = FALSE))
+            colnames(icpt) <- col_names
+            estout <- rbind(icpt, suppressWarnings(broom::tidy(fit)[, col_names]))
+        }
+        else {
+            estout <- broom::tidy(fit)[, col_names]
+            estout[1, 1] <- "intercept"
+        }
+        out <- dplyr::mutate(estout, printout = paste0(fround(estimate, digits = 3), " [", fround(std.error, digits = 3), "]"), estimate = round(estimate, digits = 3), std.error = round(std.error, digits = 3), p.value = round(p.value, digits = 3))
+        out <- dplyr::select(.data = out, term, estimate, std.error, printout, p.value)
+        list(estimates = out, stat = c(adj.r.squared = ifelse(model == "lm", fround(broom::glance(fit)$adj.r.squared, digits = 3), NA), n_obs = fround(nrow(frame_df), digits = 0)), model_spec = c(HETEROGENOUS = ifelse(!is.null(heterogenous), paste(heterogenous, collapse = " "), NA), FE = ifelse(!is.null(FE), paste(FE, collapse = " "), "no"), CLUSTER = ifelse(!is.null(cluster), paste(cluster, collapse = " "), "no"), IPW = ifelse(!is.null(IPW), paste(IPW, collapse = " "), "no")), model_status = c(R = status[1], 
+            S = status[2], P = status[3]))
+    }
+
+    absorb <- function(gamma, addnames, .FE) {
+        ws <- table(.FE, useNA = "no")
+        icpt <- wtd_mean(gamma, weights = ws)
+        result <- c(icpt)
+        if (addnames) {
+            names(result) <- "intercept"
+            attr(result, "extra") <- list(fe = factor("icpt"), obs = factor(length(.FE)))
+        }
+        result
+    }
+
+    fround <- function(x, digits) {
+        format(round(x, digits), nsmall = digits)
+    }
+
+    mgsub <- function(pattern, replacement, x, ...) {
+        if (length(pattern) != length(replacement)) {
+            stop("pattern and replacement do not have the same length.")
+        }
+        result <- x
+        for (i in 1:length(pattern)) {
+            result <- gsub(pattern[i], replacement[i], result, ...)
+        }
+        result
+    }
+
+    pfround <- function(x, digits) {
+        print(fround(x, digits), quote = FALSE)
+    }
+
+    set_seed <- function(.seed = 12345, .parallel = FALSE) {
+        suppressMessages(stopifnot(require(mosaic)))
+        if (.parallel) 
+            mosaic::set.rseed(seed = .seed)
+        else set.seed(seed = .seed)
+    }
+
+    wtd_mean <- function(x, weights = NULL, normwt = "ignored", na.rm = TRUE) {
+        if (!length(weights)) 
+            return(mean(x, na.rm = na.rm))
+        if (na.rm) {
+            s <- !is.na(x + weights)
+            x <- x[s]
+            weights <- weights[s]
+        }
+        return(sum(weights * x)/sum(weights))
+    }
+
+``` r
+summary(x, table = "table_1", script = TRUE)
+```
+
+    ## This is preamble code.
+    ## Run it before the replication of your first table in the study.
+
+    ipak <- function (pkg, quietly = FALSE) 
+    {
+        new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+        if (length(new.pkg)) 
+            install.packages(new.pkg, dependencies = TRUE)
+        loaded_packages <- sapply(pkg, require, character.only = TRUE)
+        if (any(!loaded_packages)) 
+            stop(paste0("The following packages required for replication failed to load: ", 
+                paste0(names(pkg)[!pkg], collapse = ", "), ". This can cause failure to replicate the study."))
+        if (all(loaded_packages) & !quietly) 
+            cat(paste0("Succesfully installed and/or loaded all packages required for replication: ", 
+                paste0(pkg, collapse = ", "), ".\n\n"))
+    }
+
+    ipak(c("plyr", "dplyr", "broom", "Hmisc", "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"))
+
+    analyses <- function(DV, treat, covs = NULL, heterogenous = NULL, subset = NULL, FE = NULL, cluster = NULL, IPW = NULL, data, model = "lm", status = c(TRUE, TRUE, TRUE)) {
+        suppressMessages(stopifnot(require(plyr)))
+        suppressMessages(stopifnot(require(dplyr)))
+        suppressMessages(stopifnot(require(broom)))
+        suppressMessages(stopifnot(require(Hmisc)))
+        suppressMessages(stopifnot(require(lfe)))
+        suppressMessages(stopifnot(require(multiwayvcov)))
+        suppressMessages(stopifnot(require(lmtest)))
+        if (!is.null(FE) & model != "lm") 
+            stop("Function does not support FE for other than OLS models")
+        frame_formula <- stats::as.formula(paste(DV, "~", paste(c(treat, covs, FE, cluster, IPW, heterogenous), collapse = " + ")))
+        if (is.null(heterogenous)) {
+            main_formula <- paste(c(treat, covs), collapse = " + ")
+        }
+        else {
+            main_formula <- paste(c(treat, paste0(treat, ":", heterogenous), heterogenous, covs), collapse = " + ")
+        }
+        main_formula <- paste(DV, "~", main_formula)
+        FE_formula <- ifelse(is.null(FE), 0, paste(FE, collapse = "+"))
+        cluster_formula <- ifelse(is.null(cluster), 0, paste(cluster, collapse = "+"))
+        fit_formula <- stats::as.formula(paste(main_formula, "|", FE_formula, "|", 0, "|", cluster_formula))
+        frame_df <- dplyr::filter_(.data = data, .dots = subset)
+        frame_df <- dplyr::filter_(.data = frame_df, .dots = paste(paste0("!is.na(", c(treat, DV, FE, cluster, IPW, heterogenous), ")"), collapse = " & "))
+        frame_df <- stats::model.frame(frame_formula, data = frame_df)
+        if (length(FE) > 1) 
+            frame_df[, FE] <- (plyr::colwise(as.factor))(frame_df[, FE])
+        if (length(FE) == 1) 
+            frame_df[, FE] <- as.factor(frame_df[, FE])
+        if (model == "lm") {
+            if (is.null(IPW)) {
+                fit <- lfe::felm(formula = fit_formula, data = frame_df)
+            }
+            else {
+                fit <- lfe::felm(formula = fit_formula, data = frame_df, weights = unlist(frame_df[, IPW]))
+            }
+        }
+        else if (model == "logit") {
+            if (is.null(IPW)) {
+                fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, family = binomial(link = "logit")))
+            }
+            else {
+                fit <- suppressWarnings(stats::glm(formula = stats::as.formula(main_formula), data = frame_df, weights = unlist(frame_df[, IPW]), family = binomial(link = "logit")))
+            }
+            if (!is.null(cluster)) {
+                fit <- lmtest::coeftest(x = fit, vcov = multiwayvcov::cluster.vcov(model = fit, cluster = frame_df[, cluster]))
+            }
+        }
+        col_names <- c("term", "estimate", "std.error", "p.value")
+        if (!is.null(FE)) {
+            icpt <- unname(plyr::name_rows(lfe::getfe(fit, ef = function(gamma, addnames) absorb(gamma = gamma, addnames = addnames, .FE = frame_df[, FE]), se = T, bN = 1000, cluster = TRUE)))
+            icpt <- cbind(icpt[c(5, 1, 4)], pval = 2 * stats::pt(unlist(icpt[1])/unlist(icpt[4]), df = suppressWarnings(broom::glance(fit)[, "df"]), lower.tail = FALSE))
+            colnames(icpt) <- col_names
+            estout <- rbind(icpt, suppressWarnings(broom::tidy(fit)[, col_names]))
+        }
+        else {
+            estout <- broom::tidy(fit)[, col_names]
+            estout[1, 1] <- "intercept"
+        }
+        out <- dplyr::mutate(estout, printout = paste0(fround(estimate, digits = 3), " [", fround(std.error, digits = 3), "]"), estimate = round(estimate, digits = 3), std.error = round(std.error, digits = 3), p.value = round(p.value, digits = 3))
+        out <- dplyr::select(.data = out, term, estimate, std.error, printout, p.value)
+        list(estimates = out, stat = c(adj.r.squared = ifelse(model == "lm", fround(broom::glance(fit)$adj.r.squared, digits = 3), NA), n_obs = fround(nrow(frame_df), digits = 0)), model_spec = c(HETEROGENOUS = ifelse(!is.null(heterogenous), paste(heterogenous, collapse = " "), NA), FE = ifelse(!is.null(FE), paste(FE, collapse = " "), "no"), CLUSTER = ifelse(!is.null(cluster), paste(cluster, collapse = " "), "no"), IPW = ifelse(!is.null(IPW), paste(IPW, collapse = " "), "no")), model_status = c(R = status[1], 
+            S = status[2], P = status[3]))
+    }
+
+    absorb <- function(gamma, addnames, .FE) {
+        ws <- table(.FE, useNA = "no")
+        icpt <- wtd_mean(gamma, weights = ws)
+        result <- c(icpt)
+        if (addnames) {
+            names(result) <- "intercept"
+            attr(result, "extra") <- list(fe = factor("icpt"), obs = factor(length(.FE)))
+        }
+        result
+    }
+
+    fround <- function(x, digits) {
+        format(round(x, digits), nsmall = digits)
+    }
+
+    mgsub <- function(pattern, replacement, x, ...) {
+        if (length(pattern) != length(replacement)) {
+            stop("pattern and replacement do not have the same length.")
+        }
+        result <- x
+        for (i in 1:length(pattern)) {
+            result <- gsub(pattern[i], replacement[i], result, ...)
+        }
+        result
+    }
+
+    pfround <- function(x, digits) {
+        print(fround(x, digits), quote = FALSE)
+    }
+
+    set_seed <- function(.seed = 12345, .parallel = FALSE) {
+        suppressMessages(stopifnot(require(mosaic)))
+        if (.parallel) 
+            mosaic::set.rseed(seed = .seed)
+        else set.seed(seed = .seed)
+    }
+
+    wtd_mean <- function(x, weights = NULL, normwt = "ignored", na.rm = TRUE) {
+        if (!length(weights)) 
+            return(mean(x, na.rm = na.rm))
+        if (na.rm) {
+            s <- !is.na(x + weights)
+            x <- x[s]
+            weights <- weights[s]
+        }
+        return(sum(weights * x)/sum(weights))
+    }
+
+    ## Below is the table replication code
+
+    table_1 <- mapply(FUN = analyses, MoreArgs = list(DV = "school_grade", treat = "treat", FE = "ethnicity", data = data_individual), covs = list(column_1 = c("male", "income"), column_1_rep = c("male", "income"), column_2 = NULL, column_2_rep = NULL), heterogenous = list(NULL, "iq", NULL, "iq"), subset = list("iq >= 50", NULL, "iq >= 50", NULL), status = list(c(F, T, T), c(T, T, F), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)
+
+    table_1
 
 TODO
 ====

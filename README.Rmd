@@ -106,10 +106,25 @@ source("summary.R")
 ```
 
 ### Use of `summary.replication()`
-```{r example_summary, eval=TRUE, results='markup'}
+
+#### Genearal summary
+
+```{r general_summary, eval=TRUE, results='markup'}
 summary(x)
+```
+
+#### Table summary
+
+```{r table_summary, eval=TRUE, results='markup'}
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
 summary(x, table = "table_2", reported = TRUE, registered = TRUE)
+```
+
+#### Replication script
+
+```{r replication_script, eval=TRUE, results='markup', collapse=FALSE, comment=""}
+summary(x, script = TRUE)
+summary(x, table = "table_1", script = TRUE)
 ```
 
 # TODO

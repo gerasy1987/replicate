@@ -35,3 +35,5 @@ x <-
 summary(x)
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
 summary(x, table = "table_2", reported = TRUE, registered = TRUE)
+summary(x, script = TRUE)
+summary(x, table = "table_1", script = TRUE)
