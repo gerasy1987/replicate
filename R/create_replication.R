@@ -155,7 +155,7 @@ create_replication <- function(description_list,
                          list = functions_list) %>%
     add_tech_description(type_of_object = "table replication",
                          list = table_list) %>%
-    add_tech_description(type_of_object = "package",
+    add_tech_description(type_of_object = "[R] package",
                          ends_with = ".",
                          middle_part = " required for the replication: ",
                          list = as.list(packages) %>% `names<-`(packages))
