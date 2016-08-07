@@ -10,8 +10,8 @@ output:
 - [ ] Discuss
 - [x] ~~Transform into package~~
 - Finish writing the `summary` method
-  - [x] ~~Add replication script functionality~~
-  - [ ] Add description functionality for data, etc. (?)
+  * [x] ~~Add replication script functionality~~
+  * [ ] Add description functionality for data, etc. (?)
 - [ ] Implement `output_table()` functionality
 - [ ] Test on Benin study (?)
 
