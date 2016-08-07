@@ -88,8 +88,7 @@ The function takes the following arguments:
 ```{r example_creation, eval=TRUE}
 load(file = "example/replication_data.Rdata")
 
-source("create_replication.R")
-source("summary.R")
+library(replicate)
 
 (
   x <-

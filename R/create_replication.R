@@ -1,3 +1,24 @@
+#' Create replication object
+#'
+#' FUNCTION DESCRIPTION
+#'
+#' @param description_list DESCRIPTION.
+#' @param packages DESCRIPTION.
+#' @param project_path DESCRIPTION.
+#' @param data_list DESCRIPTION.
+#' @param function_script_path DESCRIPTION.
+#' @param replication_script_path DESCRIPTION.
+#' @param quietly DESCRIPTION.
+#' @param checks DESCRIPTION.
+#'
+#' @return RETURN DESCRIPTION
+#' @examples
+#' # ADD EXAMPLES HERE
+#'
+#' @importFrom dplyr tbl as.tbl
+#' @importFrom readr read_file
+#' @importFrom magrittr %>%
+#'
 #' @export
 
 create_replication <- function(description_list,
@@ -10,9 +31,7 @@ create_replication <- function(description_list,
                                checks = TRUE) {
 
   # required packages
-  requireNamespace("plyr", quietly = TRUE)
   requireNamespace("dplyr", quietly = TRUE)
-  requireNamespace("broom", quietly = TRUE)
   requireNamespace("magrittr", quietly = TRUE)
   requireNamespace("readr", quietly = TRUE)
 
@@ -174,6 +193,16 @@ create_replication <- function(description_list,
 }
 
 #' @export
+print.replication <- function(x, ...){
+  cat(paste0(unlist(attr(x = x, which = "misc")), collapse = ""), "\n\n")
+  object <- x
+  class(object) <- "list"
+  attributes(object) <- NULL
+  print(object)
+  invisible(x)
+}
+
+#' @export
 add_study_description <- function(starting_description,
                                   pattern,
                                   description_text,
@@ -238,19 +267,3 @@ add_tech_description <- function(starting_description,
   }
   paste0(part1, part2)
 }
-
-#' @export
-ipak <- function(pkg, quietly = FALSE) {
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-    install.packages(new.pkg, dependencies = TRUE)
-  loaded_packages <- sapply(pkg, require, character.only = TRUE)
-  if (any(!loaded_packages))
-    stop(paste0("The following packages required for replication failed to load: ",
-                paste0(names(pkg)[!pkg], collapse = ", "),
-                ". This can cause failure to replicate the study.") )
-  if (all(loaded_packages) & !quietly)
-    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
-               paste0(pkg, collapse = ", "), ".\n\n"))
-}
-

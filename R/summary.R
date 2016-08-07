@@ -1,14 +1,21 @@
+#' Summary method for replication class
+#'
+#' FUNCTION DESCRIPTION
+#'
+#' @param object DESCRIPTION.
+#' @param table DESCRIPTION.
+#' @param reported DESCRIPTION.
+#' @param registered DESCRIPTION.
+#' @param script DESCRIPTION.
+#' @param desc DESCRIPTION.
+#' @param ... DESCRIPTION.
+#'
+#' @return RETURN DESCRIPTION
+#' @examples
+#' # ADD EXAMPLES HERE
+#'
 #' @export
-print.replication <- function(object, ...){
-  cat(paste0(unlist(attr(x = object, which = "misc")), collapse = ""), "\n\n")
-  x <- object
-  class(x) <- "list"
-  attributes(x) <- NULL
-  print(x)
-  invisible(object)
-}
 
-#' @export
 summary.replication <- function(object,
                                 table = NULL,
                                 reported = FALSE,
@@ -56,31 +63,31 @@ summary.replication <- function(object,
 }
 
 #' @export
-print.summary.replication <- function(object, ...) {
-  if ("replication.table" %in% class(object)) {
-    class(object) <- "list"
-    cat("Results for", attr(object, which = "name"), "\n\n")
-    for (i in 1:length(object)) {
-      if (length(object[[i]]) != 0) {
-        cat(names(object)[i], ":\n\n")
-        for (j in (1:dim(object[[i]])[2])){
-          cat(colnames(object[[i]])[j],"\n\n")
-          print(object[[i]][["estimates",j]])
+print.summary.replication <- function(x, ...) {
+  if ("replication.table" %in% class(x)) {
+    class(x) <- "list"
+    cat("Results for", attr(x, which = "name"), "\n\n")
+    for (i in 1:length(x)) {
+      if (length(x[[i]]) != 0) {
+        cat(names(x)[i], ":\n\n")
+        for (j in (1:dim(x[[i]])[2])){
+          cat(colnames(x[[i]])[j],"\n\n")
+          print(x[[i]][["estimates",j]])
           cat("\n")
-          stats_specs <- c(object[[i]][["stat",j]],object[[i]][["model_spec",j]])
+          stats_specs <- c(x[[i]][["stat",j]],x[[i]][["model_spec",j]])
           cat(paste(paste0(names(stats_specs), " = ", stats_specs), collapse = ", "), "\n\n")
         }
       }
     }
-    invisible(object)
-  } else if ("replication.script" %in% class(object)) {
-    class(object) <- "character"
-    cat(object, sep = "\n\n")
-    invisible(object)
+    invisible(x)
+  } else if ("replication.script" %in% class(x)) {
+    class(x) <- "character"
+    cat(x, sep = "\n\n")
+    invisible(x)
   } else {
-    class(object) <- "list"
-    cat(unlist(object))
-    invisible(object)
+    class(x) <- "list"
+    cat(unlist(x))
+    invisible(x)
   }
 }
 
