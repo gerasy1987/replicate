@@ -3,12 +3,14 @@ Title: Replication Package
 Version: 0.0.0.9000
 Authors@R: person("Georgiy", "Syunyaev", email = "gs2716@columbia.edu", role = c("aut", "cre"))
 Description: The Package provides a function to create a replication class object and summary methods for this class of object.
-Depends:R (>= 3.2.0),
-    plyr,
+Depends:
+    R (>= 3.2.0),
     dplyr,
-    magrittr
-Imports:
-    readr,
+    magrittr,
+    readr
+Suggests:
+    plyr,
+    testthat
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
