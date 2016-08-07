@@ -1,6 +1,7 @@
+Replicate package
+================
 
--   [Replicate package](#replicate-package)
-    -   [TODO](#todo)
+-   [TODO](#todo)
 -   [Description of the replicate functionality:](#description-of-the-replicate-functionality)
     -   [`create_replication()`](#create_replication)
     -   [`summary()`](#summary)
@@ -11,13 +12,10 @@
             -   [Table summary](#table-summary)
             -   [Replication script](#replication-script)
 
-Replicate package
-=================
-
 [![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)
 
 TODO
-----
+====
 
 -   \[ \] Discuss
 -   \[x\] ~~Transform into package~~
@@ -237,7 +235,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.011 85.013 [1.011]   0.000
+    1 intercept   85.013     1.024 85.013 [1.024]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -263,7 +261,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.875 -0.368 [0.875]   1.324
+    1    intercept   -0.368     0.869 -0.368 [0.869]   1.326
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -273,7 +271,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.678  0.711 [0.678]   0.300
+    1 intercept    0.711     0.684  0.711 [0.684]   0.305
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -283,7 +281,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.104 -0.215 [1.104]   1.153
+    1    intercept   -0.215     1.148 -0.215 [1.148]   1.147
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -297,7 +295,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.188  0.324 [1.188]   0.786
+    1    intercept    0.324     1.250  0.324 [1.250]   0.797
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -309,7 +307,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.678  0.711 [0.678]   0.300
+    1 intercept    0.711     0.684  0.711 [0.684]   0.305
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -319,7 +317,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.506  0.676 [1.506]   0.656
+    1    intercept    0.676     1.481  0.676 [1.481]   0.651
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
