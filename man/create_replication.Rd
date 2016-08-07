@@ -9,30 +9,30 @@ create_replication(description_list, packages = NULL, project_path = NULL,
   checks = TRUE)
 }
 \arguments{
-\item{description_list}{DESCRIPTION.}
+\item{description_list}{List of miscellaneous descriptions of replication.}
 
-\item{packages}{DESCRIPTION.}
+\item{packages}{Character vector of packages required for replication.}
 
-\item{project_path}{DESCRIPTION.}
+\item{project_path}{Character string giving the path to the directory, where function and replication scripts are stored. Defaults to \code{NULL}, which is reasonable if RStudio project is used.}
 
-\item{data_list}{DESCRIPTION.}
+\item{data_list}{A named list of data-frames used for the replication.}
 
-\item{function_script_path}{DESCRIPTION.}
+\item{function_script_path}{Character string giving the name of \code{R} script which contains all functions required for the replication. The script should only include declarations of named functions using \code{<-} operator.}
 
-\item{replication_script_path}{DESCRIPTION.}
+\item{replication_script_path}{Character string giving the name of \code{R} script which contains all calls for table replications. The script should consist of only single calls for replication of one table and the table objects should be created using \code{<-} operator.}
 
-\item{quietly}{DESCRIPTION.}
+\item{quietly}{Logical. Whether the creation of replication should go without any messages printed to console.}
 
-\item{checks}{DESCRIPTION.}
+\item{checks}{Logical. If \code{quietly = FALSE}, whether the checks for packages and consistency of replication should be performed.}
 }
 \value{
-RETURN DESCRIPTION
+Replication class object
 }
 \description{
-FUNCTION DESCRIPTION
+he function takes main parts of replication object as an arguments and returns the replication class object.
 }
 \examples{
-# ADD EXAMPLES HERE
+# To be written...
 
 }
 

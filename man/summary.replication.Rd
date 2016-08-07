@@ -8,19 +8,19 @@
   registered = FALSE, script = FALSE, desc = NULL, ...)
 }
 \arguments{
-\item{object}{DESCRIPTION.}
+\item{object}{Object of class replication created by \code{create_replication()}.}
 
-\item{table}{DESCRIPTION.}
+\item{table}{Character string specifying the table to be replicated. The table name should include number of the table as specified in \code{replication_script_path} file and the word "table".}
 
-\item{reported}{DESCRIPTION.}
+\item{reported}{Logical. Whether to show columns with specifications reported in the paper.}
 
-\item{registered}{DESCRIPTION.}
+\item{registered}{Logical. Whether to show columns with specifications registered in PAP.}
 
-\item{script}{DESCRIPTION.}
+\item{script}{Logical. Whether to print the script to replicate the results of the study. If \code{table = NULL}, then returns preamble which includes all the functions and packages required for replication. If \code{table != NULL}, then returns preamble and the code for replication of the specified table.}
 
-\item{desc}{DESCRIPTION.}
+\item{desc}{To be implemented...}
 
-\item{...}{DESCRIPTION.}
+\item{...}{To be implemented...}
 }
 \value{
 RETURN DESCRIPTION

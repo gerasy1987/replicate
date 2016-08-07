@@ -2,13 +2,13 @@
 #'
 #' FUNCTION DESCRIPTION
 #'
-#' @param object DESCRIPTION.
-#' @param table DESCRIPTION.
-#' @param reported DESCRIPTION.
-#' @param registered DESCRIPTION.
-#' @param script DESCRIPTION.
-#' @param desc DESCRIPTION.
-#' @param ... DESCRIPTION.
+#' @param object Object of class replication created by \code{create_replication()}.
+#' @param table Character string specifying the table to be replicated. The table name should include number of the table as specified in \code{replication_script_path} file and the word "table".
+#' @param reported Logical. Whether to show columns with specifications reported in the paper.
+#' @param registered Logical. Whether to show columns with specifications registered in PAP.
+#' @param script Logical. Whether to print the script to replicate the results of the study. If \code{table = NULL}, then returns preamble which includes all the functions and packages required for replication. If \code{table != NULL}, then returns preamble and the code for replication of the specified table.
+#' @param desc To be implemented...
+#' @param ... To be implemented...
 #'
 #' @return RETURN DESCRIPTION
 #' @examples

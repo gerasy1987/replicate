@@ -1,19 +1,19 @@
 #' Create replication object
 #'
-#' FUNCTION DESCRIPTION
+#' he function takes main parts of replication object as an arguments and returns the replication class object.
 #'
-#' @param description_list DESCRIPTION.
-#' @param packages DESCRIPTION.
-#' @param project_path DESCRIPTION.
-#' @param data_list DESCRIPTION.
-#' @param function_script_path DESCRIPTION.
-#' @param replication_script_path DESCRIPTION.
-#' @param quietly DESCRIPTION.
-#' @param checks DESCRIPTION.
+#' @param description_list List of miscellaneous descriptions of replication.
+#' @param packages Character vector of packages required for replication.
+#' @param project_path Character string giving the path to the directory, where function and replication scripts are stored. Defaults to \code{NULL}, which is reasonable if RStudio project is used.
+#' @param data_list A named list of data-frames used for the replication.
+#' @param function_script_path Character string giving the name of \code{R} script which contains all functions required for the replication. The script should only include declarations of named functions using \code{<-} operator.
+#' @param replication_script_path Character string giving the name of \code{R} script which contains all calls for table replications. The script should consist of only single calls for replication of one table and the table objects should be created using \code{<-} operator.
+#' @param quietly Logical. Whether the creation of replication should go without any messages printed to console.
+#' @param checks Logical. If \code{quietly = FALSE}, whether the checks for packages and consistency of replication should be performed.
 #'
-#' @return RETURN DESCRIPTION
+#' @return Replication class object
 #' @examples
-#' # ADD EXAMPLES HERE
+#' # To be written...
 #'
 #' @importFrom dplyr tbl as.tbl
 #' @importFrom readr read_file
@@ -162,6 +162,7 @@ create_replication <- function(description_list,
 
   attr(replication, which = "misc") <- list(study = study_misc,
                                             tech = technical_misc)
+
   if (!quietly){
     cat("Do you want to check that replication works? (Yes/No):")
     check_rep <- readLines(n = 1)
@@ -176,8 +177,8 @@ create_replication <- function(description_list,
     for (i in 1:length(table_list)) {
       try(expr = eval(parse(text = table_list[[i]])), silent = TRUE)
       if ( class(try(expr = eval(parse(text = table_list[[i]])),
-                     silent = TRUE)) == "try-error" & !quietly) {
-        warning(paste0("The check of replication of ", names(table_list)[i], " failed."))
+                     silent = TRUE)) == "try-error") {
+        stop(paste0("The replication of ", names(table_list)[i], " failed."))
       } else if (!quietly) {
         cat(paste0("Succesfully replicated ", names(table_list)[i], ".\n"))
       }
