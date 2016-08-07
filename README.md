@@ -8,14 +8,11 @@ Replicate package
     -   [Examples](#examples)
         -   [Use of `create_replication()`](#use-of-create_replication)
         -   [Use of `summary.replication()`](#use-of-summary.replication)
-            -   [Genearal summary](#genearal-summary)
-            -   [Table summary](#table-summary)
-            -   [Replication script](#replication-script)
 
 [![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)
 
 TODO
-====
+----
 
 -   \[ \] Discuss
 -   \[x\] ~~Transform into package~~
@@ -26,10 +23,9 @@ TODO
 -   \[ \] Test on Benin study (?)
 
 Description of the replicate functionality:
-===========================================
+-------------------------------------------
 
-`create_replication()`
-----------------------
+### `create_replication()`
 
 *The function takes main parts of replication object as an arguments and returns the replication class object. (see [create\_replication.R](https://github.com/gerasy1987/replicate/blob/master/create_replication.R) for code).*
 
@@ -68,8 +64,7 @@ There are also 2 additional arguments:
 -   `quietly` (`= FALSE`): Logical. Whether the creation of replication should go without any messages printed to `console`.
 -   `checks` (`= TRUE`): Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed.
 
-`summary()`
------------
+### `summary()`
 
 *The function takes replication object and either returns miscellaneous description of the object, or if additional arguments are specified, then only summary of parts of object are returned. (see [summary.R](https://github.com/gerasy1987/replicate/blob/master/summary.R) for code).*
 
@@ -82,8 +77,7 @@ The function takes the following arguments:
 -   `script` (`= FALSE`): Logical. Whether to print the script to replicate the results of the study. If `table = NULL`, then returns preamble which includes all the functions and packages required for replication. If `table != NULL`, then returns preamble and the code for replication of the specified table.
 -   `desc` (`= FALSE`): *To be implemented...*
 
-Examples
---------
+### Examples
 
 ``` r
 devtools::install_github("gerasy1987/replicate", quiet = TRUE)
@@ -93,7 +87,7 @@ library(replicate)
 load(file = "example/replication_data.Rdata")
 ```
 
-### Use of `create_replication()`
+#### Use of `create_replication()`
 
 ``` r
 (
@@ -205,9 +199,9 @@ load(file = "example/replication_data.Rdata")
     ## [[4]]$table_2
     ## [1] "mapply(FUN = analyses, MoreArgs = list(DV = \"turnout\", treat = \"treat\", FE = \"urban\", data = data_admin), covs = list(column_1 = c(\"age\", \"school_grade\"), column_1_rep = c(\"age\", \"school_grade\"), column_2 = c(\"height\", \"income\"), column_3 = c(\"age\", \"school_grade\", \"height\", \"income\"), column_3_rep = c(\"age\", \"school_grade\", \"height\", \"income\")), heterogenous = list(NULL, \"iq\", NULL, NULL, \"iq\"), subset = list(\"iq >= 50\", NULL, \"iq >= 50\", \"iq >= 50\", NULL), status = list(c(F, T, T), c(T, T, F), \n    c(T, T, T), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)"
 
-### Use of `summary.replication()`
+#### Use of `summary.replication()`
 
-#### Genearal summary
+1.  Genearal summary
 
 ``` r
 summary(x)
@@ -222,7 +216,7 @@ summary(x)
     Technical:
     There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. There are 9 [R] packages required for the replication: plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr.
 
-#### Table summary
+1.  Table summary
 
 ``` r
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
@@ -235,7 +229,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.024 85.013 [1.024]   0.000
+    1 intercept   85.013     1.016 85.013 [1.016]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -245,7 +239,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.641 84.937 [0.641]   0.000
+    1 intercept   84.937     0.660 84.937 [0.660]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -261,7 +255,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.869 -0.368 [0.869]   1.326
+    1    intercept   -0.368     0.823 -0.368 [0.823]   1.343
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -271,7 +265,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.684  0.711 [0.684]   0.305
+    1 intercept    0.711     0.690  0.711 [0.690]   0.309
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -281,7 +275,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.148 -0.215 [1.148]   1.147
+    1    intercept   -0.215     1.125 -0.215 [1.125]   1.150
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -295,7 +289,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.250  0.324 [1.250]   0.797
+    1    intercept    0.324     1.209  0.324 [1.209]   0.790
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -307,7 +301,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.684  0.711 [0.684]   0.305
+    1 intercept    0.711     0.690  0.711 [0.690]   0.309
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -317,7 +311,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.481  0.676 [1.481]   0.651
+    1    intercept    0.676     1.525  0.676 [1.525]   0.660
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
@@ -328,7 +322,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
 
     adj.r.squared = -0.098, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no 
 
-#### Replication script
+1.  Replication script
 
 ``` r
 summary(x, script = TRUE)
