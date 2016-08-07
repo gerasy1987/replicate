@@ -1,13 +1,11 @@
 rm(list = ls())
 
-if (!require(pacman)) install.packages(pacman)
-pacman::p_load(plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest,
-               wakefield, magrittr)
+devtools::install_github("gerasy1987/replicate",
+                         auth_token = "b5f3f71208ad132982a9217c60690b1164534b09")
+
+library(replicate)
 
 load(file = "example/replication_data.Rdata")
-
-source("create_replication.R")
-source("summary.R")
 
 x <-
   create_replication(
