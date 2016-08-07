@@ -1,4 +1,5 @@
 
+-   [TODO](#todo)
 -   [Description of the replicate functionality:](#description-of-the-replicate-functionality)
     -   [`create_replication()`](#create_replication)
     -   [`summary()`](#summary)
@@ -8,27 +9,15 @@
             -   [Genearal summary](#genearal-summary)
             -   [Table summary](#table-summary)
             -   [Replication script](#replication-script)
--   [TODO](#todo)
 
-``` r
-ipak <- function(pkg, quietly = FALSE) {
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-    install.packages(new.pkg, dependencies = TRUE)
-  loaded_packages <- sapply(pkg, require, character.only = TRUE)
-  if (any(!loaded_packages))
-    stop(paste0("The following packages required for replication failed to load: ",
-                paste0(names(pkg)[!pkg], collapse = ", "),
-                ". This can cause failure to replicate the study.") )
-  if (all(loaded_packages) & !quietly)
-    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
-               paste0(pkg, collapse = ", "), ".\n\n"))
-}
+TODO
+====
 
-ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr",
-       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
-     quietly = TRUE)
-```
+-   \[ \] Discuss
+-   \[x\] Transform into package
+-   \[ \] Finish writing the `summary` method
+-   \[ \] Test on Benin study
+-   \[ \] Implement `output_table()` functionality
 
 Description of the replicate functionality:
 ===========================================
@@ -90,13 +79,35 @@ The function takes the following arguments:
 Examples
 --------
 
+``` r
+ipak <- function(pkg, quietly = FALSE) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  loaded_packages <- sapply(pkg, require, character.only = TRUE)
+  if (any(!loaded_packages))
+    stop(paste0("The following packages required for replication failed to load: ",
+                paste0(names(pkg)[!pkg], collapse = ", "),
+                ". This can cause failure to replicate the study.") )
+  if (all(loaded_packages) & !quietly)
+    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
+               paste0(pkg, collapse = ", "), ".\n\n"))
+}
+
+ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr", "devtools",
+       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
+     quietly = TRUE)
+
+devtools::install_github("gerasy1987/replicate", 
+                         auth_token = "b5f3f71208ad132982a9217c60690b1164534b09")
+
+library(replicate)
+load(file = "example/replication_data.Rdata")
+```
+
 ### Use of `create_replication()`
 
 ``` r
-load(file = "example/replication_data.Rdata")
-
-library(replicate)
-
 (
   x <-
   create_replication(
@@ -236,7 +247,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.054 85.013 [1.054]   0.000
+    1 intercept   85.013     1.066 85.013 [1.066]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -246,7 +257,7 @@ summary(x, table = "table_1", reported = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.628 84.937 [0.628]   0.000
+    1 intercept   84.937     0.647 84.937 [0.647]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -262,7 +273,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.857 -0.368 [0.857]   1.330
+    1    intercept   -0.368     0.863 -0.368 [0.863]   1.328
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -272,7 +283,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.683  0.711 [0.683]   0.304
+    1 intercept    0.711     0.688  0.711 [0.688]   0.307
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -282,7 +293,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.134 -0.215 [1.134]   1.149
+    1    intercept   -0.215     1.152 -0.215 [1.152]   1.147
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -296,7 +307,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.200  0.324 [1.200]   0.789
+    1    intercept    0.324     1.246  0.324 [1.246]   0.796
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -308,7 +319,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.683  0.711 [0.683]   0.304
+    1 intercept    0.711     0.688  0.711 [0.688]   0.307
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -318,7 +329,7 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.493  0.676 [1.493]   0.653
+    1    intercept    0.676     1.483  0.676 [1.483]   0.651
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
@@ -612,12 +623,3 @@ summary(x, table = "table_1", script = TRUE)
     table_1 <- mapply(FUN = analyses, MoreArgs = list(DV = "school_grade", treat = "treat", FE = "ethnicity", data = data_individual), covs = list(column_1 = c("male", "income"), column_1_rep = c("male", "income"), column_2 = NULL, column_2_rep = NULL), heterogenous = list(NULL, "iq", NULL, "iq"), subset = list("iq >= 50", NULL, "iq >= 50", NULL), status = list(c(F, T, T), c(T, T, F), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)
 
     table_1
-
-TODO
-====
-
--   Discuss
--   Transform into package
--   Finish writing the `summary` method
--   Test on Benin study
--   Implement `output_table()` functionality

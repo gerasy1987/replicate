@@ -5,31 +5,19 @@ output:
     toc_depth: 4
 ---
 
+# TODO
+
+- [ ] Discuss
+- [x] Transform into package
+- [ ] Finish writing the `summary` method
+- [ ] Test on Benin study
+- [ ] Implement `output_table()` functionality
+
+# Description of the replicate functionality:
+
 ```{r global_options, echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, error=FALSE, eval = FALSE, echo = TRUE)
 ```
-
-```{r load_packages, eval = TRUE}
-ipak <- function(pkg, quietly = FALSE) {
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-    install.packages(new.pkg, dependencies = TRUE)
-  loaded_packages <- sapply(pkg, require, character.only = TRUE)
-  if (any(!loaded_packages))
-    stop(paste0("The following packages required for replication failed to load: ",
-                paste0(names(pkg)[!pkg], collapse = ", "),
-                ". This can cause failure to replicate the study.") )
-  if (all(loaded_packages) & !quietly)
-    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
-               paste0(pkg, collapse = ", "), ".\n\n"))
-}
-
-ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr",
-       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
-     quietly = TRUE)
-```
-
-# Description of the replicate functionality:
 
 ## `create_replication()`
 
@@ -38,7 +26,7 @@ _The function takes main parts of replication object as an arguments and returns
 The function takes 6 main arguments arguments (defaults are given in parentheses if specified):
   
   - `description_list`: List of miscellaneous descriptions of replication. *Example*:
-```{r chunk_1}
+```{r example_1}
 description_list =
   list(
     study_name = "Fake Study",
@@ -57,7 +45,7 @@ description_list =
   - `project_path` (`= NULL`): Character string giving the path to the directory, where function and replication scripts are stored. Defaults to `NULL`, which is reasonable if RStudio project is used.
   - `data_list`: A named list of data-frames used for the replication. *Example*:
     
-```{r chunk_2}
+```{r example_2}
 data_list = list(data_admin = data_admin, data_individual = data_individual)
 ```
     
@@ -84,11 +72,35 @@ The function takes the following arguments:
 
 ## Examples
 
-### Use of `create_replication()`
-```{r example_creation, eval=TRUE}
-load(file = "example/replication_data.Rdata")
+```{r setup, eval = TRUE}
+ipak <- function(pkg, quietly = FALSE) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  loaded_packages <- sapply(pkg, require, character.only = TRUE)
+  if (any(!loaded_packages))
+    stop(paste0("The following packages required for replication failed to load: ",
+                paste0(names(pkg)[!pkg], collapse = ", "),
+                ". This can cause failure to replicate the study.") )
+  if (all(loaded_packages) & !quietly)
+    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
+               paste0(pkg, collapse = ", "), ".\n\n"))
+}
+
+ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr", "devtools",
+       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
+     quietly = TRUE)
+
+devtools::install_github("gerasy1987/replicate", 
+                         auth_token = "b5f3f71208ad132982a9217c60690b1164534b09")
 
 library(replicate)
+load(file = "example/replication_data.Rdata")
+```
+
+### Use of `create_replication()`
+```{r example_creation, eval=TRUE}
+
 
 (
   x <-
@@ -140,11 +152,3 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
 summary(x, script = TRUE)
 summary(x, table = "table_1", script = TRUE)
 ```
-
-# TODO
-
-- Discuss
-- Transform into package
-- Finish writing the `summary` method
-- Test on Benin study
-- Implement `output_table()` functionality
