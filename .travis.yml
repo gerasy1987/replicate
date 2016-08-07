@@ -3,9 +3,7 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 r_github_packages:
-  - gerasy1987/replicate
-install:
-  - ./travis-tool.sh github_package jimhester/covr
+  - jimhester/covr
 after_success:
   - Rscript -e 'covr::coveralls()'
 notifications:
