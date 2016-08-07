@@ -8,8 +8,23 @@
 -   [TODO](#todo)
 
 ``` r
-if (!require(pacman)) install.packages(pacman)
-pacman::p_load(plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr)
+ipak <- function(pkg, quietly = FALSE) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  loaded_packages <- sapply(pkg, require, character.only = TRUE)
+  if (any(!loaded_packages))
+    stop(paste0("The following packages required for replication failed to load: ",
+                paste0(names(pkg)[!pkg], collapse = ", "),
+                ". This can cause failure to replicate the study.") )
+  if (all(loaded_packages) & !quietly)
+    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
+               paste0(pkg, collapse = ", "), ".\n\n"))
+}
+
+ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr",
+       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
+     quietly = TRUE)
 ```
 
 Description of the replicate functionality:
@@ -197,14 +212,14 @@ source("summary.R")
 summary(x)
 ```
 
-    ## Miscellany:
-    ## This is a replication of the Fake Study. The original study is conducted by Georgiy Syunyaev from Columbia University and Someone Else from Some Other University. The replication is conducted by Georgiy Syunyaev.
-    ## 
-    ## Abstract:
-    ## The aim of this study is to test the create_replication() functionality. This is the first attempt at creatreplication class of objects in [R] for systematic storage and access to study replication materials.
-    ##  
-    ## Technical:
-    ## There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. There are 9 packages required for the replication: plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr.
+    Miscellany:
+    This is a replication of the Fake Study. The original study is conducted by Georgiy Syunyaev from Columbia University and Someone Else from Some Other University. The replication is conducted by Georgiy Syunyaev.
+
+    Abstract:
+    The aim of this study is to test the create_replication() functionality. This is the first attempt at creatreplication class of objects in [R] for systematic storage and access to study replication materials.
+     
+    Technical:
+    There are 2 datasets provided: data_admin (50 obs. of 11 variables), data_individual (1000 obs. of 12 variables). There are 7 custom functions provided: analyses, absorb, fround, mgsub, pfround, set_seed, wtd_mean. There are 2 table replications provided: table_1, table_2. There are 9 packages required for the replication: plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr.
 
 #### Table summary
 
@@ -212,105 +227,105 @@ summary(x)
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
 ```
 
-    ## Results for table_1 
-    ## 
-    ## Reported :
-    ## 
-    ## column_1 
-    ## 
-    ##        term estimate std.error       printout p.value
-    ## 1 intercept   85.013     1.044 85.013 [1.044]   0.000
-    ## 2     treat   -1.080     0.922 -1.080 [0.922]   0.242
-    ## 3      male   -0.298     0.924 -0.298 [0.924]   0.747
-    ## 4    income    0.000     0.000  0.000 [0.000]   0.902
-    ## 
-    ## adj.r.squared = -0.003, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
-    ## 
-    ## column_2 
-    ## 
-    ##        term estimate std.error       printout p.value
-    ## 1 intercept   84.937     0.643 84.937 [0.643]   0.000
-    ## 2     treat   -1.076     0.921 -1.076 [0.921]   0.243
-    ## 
-    ## adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no
+    Results for table_1 
+
+    Reported :
+
+    column_1 
+
+           term estimate std.error       printout p.value
+    1 intercept   85.013     1.073 85.013 [1.073]   0.000
+    2     treat   -1.080     0.922 -1.080 [0.922]   0.242
+    3      male   -0.298     0.924 -0.298 [0.924]   0.747
+    4    income    0.000     0.000  0.000 [0.000]   0.902
+
+    adj.r.squared = -0.003, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
+
+    column_2 
+
+           term estimate std.error       printout p.value
+    1 intercept   84.937     0.621 84.937 [0.621]   0.000
+    2     treat   -1.076     0.921 -1.076 [0.921]   0.243
+
+    adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
 
 ``` r
 summary(x, table = "table_2", reported = TRUE, registered = TRUE)
 ```
 
-    ## Results for table_2 
-    ## 
-    ## Reported :
-    ## 
-    ## column_1 
-    ## 
-    ##           term estimate std.error       printout p.value
-    ## 1    intercept   -0.368     0.822 -0.368 [0.822]   1.343
-    ## 2        treat    0.072     0.058  0.072 [0.058]   0.219
-    ## 3          age   -0.004     0.009 -0.004 [0.009]   0.636
-    ## 4 school_grade    0.012     0.010  0.012 [0.010]   0.231
-    ## 
-    ## adj.r.squared = -0.021, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
-    ## 
-    ## column_2 
-    ## 
-    ##        term estimate std.error       printout p.value
-    ## 1 intercept    0.711     0.673  0.711 [0.673]   0.297
-    ## 2     treat    0.051     0.057  0.051 [0.057]   0.380
-    ## 3    height   -0.001     0.004 -0.001 [0.004]   0.890
-    ## 4    income    0.000     0.000  0.000 [0.000]   0.543
-    ## 
-    ## adj.r.squared = -0.048, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
-    ## 
-    ## column_3 
-    ## 
-    ##           term estimate std.error       printout p.value
-    ## 1    intercept   -0.215     1.134 -0.215 [1.134]   1.149
-    ## 2        treat    0.068     0.060  0.068 [0.060]   0.262
-    ## 3          age   -0.004     0.009 -0.004 [0.009]   0.690
-    ## 4 school_grade    0.012     0.010  0.012 [0.010]   0.268
-    ## 5       height    0.000     0.004  0.000 [0.004]   0.946
-    ## 6       income    0.000     0.000  0.000 [0.000]   0.662
-    ## 
-    ## adj.r.squared = -0.063, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
-    ## 
-    ## Registered :
-    ## 
-    ## column_1_rep 
-    ## 
-    ##           term estimate std.error       printout p.value
-    ## 1    intercept    0.324     1.221  0.324 [1.221]   0.792
-    ## 2        treat   -0.744     1.508 -0.744 [1.508]   0.624
-    ## 3           iq   -0.006     0.009 -0.006 [0.009]   0.474
-    ## 4          age   -0.003     0.009 -0.003 [0.009]   0.740
-    ## 5 school_grade    0.011     0.010  0.011 [0.010]   0.300
-    ## 6     treat:iq    0.008     0.015  0.008 [0.015]   0.594
-    ## 
-    ## adj.r.squared = -0.055, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no 
-    ## 
-    ## column_2 
-    ## 
-    ##        term estimate std.error       printout p.value
-    ## 1 intercept    0.711     0.673  0.711 [0.673]   0.297
-    ## 2     treat    0.051     0.057  0.051 [0.057]   0.380
-    ## 3    height   -0.001     0.004 -0.001 [0.004]   0.890
-    ## 4    income    0.000     0.000  0.000 [0.000]   0.543
-    ## 
-    ## adj.r.squared = -0.048, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
-    ## 
-    ## column_3_rep 
-    ## 
-    ##           term estimate std.error       printout p.value
-    ## 1    intercept    0.676     1.539  0.676 [1.539]   0.663
-    ## 2        treat   -0.824     1.546 -0.824 [1.546]   0.597
-    ## 3           iq   -0.007     0.009 -0.007 [0.009]   0.431
-    ## 4          age   -0.002     0.009 -0.002 [0.009]   0.820
-    ## 5 school_grade    0.010     0.011  0.010 [0.011]   0.362
-    ## 6       height   -0.001     0.004 -0.001 [0.004]   0.878
-    ## 7       income    0.000     0.000  0.000 [0.000]   0.592
-    ## 8     treat:iq    0.009     0.015  0.009 [0.015]   0.571
-    ## 
-    ## adj.r.squared = -0.098, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no
+    Results for table_2 
+
+    Reported :
+
+    column_1 
+
+              term estimate std.error       printout p.value
+    1    intercept   -0.368     0.860 -0.368 [0.860]   1.329
+    2        treat    0.072     0.058  0.072 [0.058]   0.219
+    3          age   -0.004     0.009 -0.004 [0.009]   0.636
+    4 school_grade    0.012     0.010  0.012 [0.010]   0.231
+
+    adj.r.squared = -0.021, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
+
+    column_2 
+
+           term estimate std.error       printout p.value
+    1 intercept    0.711     0.712  0.711 [0.712]   0.324
+    2     treat    0.051     0.057  0.051 [0.057]   0.380
+    3    height   -0.001     0.004 -0.001 [0.004]   0.890
+    4    income    0.000     0.000  0.000 [0.000]   0.543
+
+    adj.r.squared = -0.048, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
+
+    column_3 
+
+              term estimate std.error       printout p.value
+    1    intercept   -0.215     1.101 -0.215 [1.101]   1.154
+    2        treat    0.068     0.060  0.068 [0.060]   0.262
+    3          age   -0.004     0.009 -0.004 [0.009]   0.690
+    4 school_grade    0.012     0.010  0.012 [0.010]   0.268
+    5       height    0.000     0.004  0.000 [0.004]   0.946
+    6       income    0.000     0.000  0.000 [0.000]   0.662
+
+    adj.r.squared = -0.063, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
+
+    Registered :
+
+    column_1_rep 
+
+              term estimate std.error       printout p.value
+    1    intercept    0.324     1.250  0.324 [1.250]   0.797
+    2        treat   -0.744     1.508 -0.744 [1.508]   0.624
+    3           iq   -0.006     0.009 -0.006 [0.009]   0.474
+    4          age   -0.003     0.009 -0.003 [0.009]   0.740
+    5 school_grade    0.011     0.010  0.011 [0.010]   0.300
+    6     treat:iq    0.008     0.015  0.008 [0.015]   0.594
+
+    adj.r.squared = -0.055, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no 
+
+    column_2 
+
+           term estimate std.error       printout p.value
+    1 intercept    0.711     0.712  0.711 [0.712]   0.324
+    2     treat    0.051     0.057  0.051 [0.057]   0.380
+    3    height   -0.001     0.004 -0.001 [0.004]   0.890
+    4    income    0.000     0.000  0.000 [0.000]   0.543
+
+    adj.r.squared = -0.048, n_obs = 50, HETEROGENOUS = NA, FE = urban, CLUSTER = no, IPW = no 
+
+    column_3_rep 
+
+              term estimate std.error       printout p.value
+    1    intercept    0.676     1.486  0.676 [1.486]   0.652
+    2        treat   -0.824     1.546 -0.824 [1.546]   0.597
+    3           iq   -0.007     0.009 -0.007 [0.009]   0.431
+    4          age   -0.002     0.009 -0.002 [0.009]   0.820
+    5 school_grade    0.010     0.011  0.010 [0.011]   0.362
+    6       height   -0.001     0.004 -0.001 [0.004]   0.878
+    7       income    0.000     0.000  0.000 [0.000]   0.592
+    8     treat:iq    0.009     0.015  0.009 [0.015]   0.571
+
+    adj.r.squared = -0.098, n_obs = 50, HETEROGENOUS = iq, FE = urban, CLUSTER = no, IPW = no 
 
 #### Replication script
 
@@ -318,8 +333,10 @@ summary(x, table = "table_2", reported = TRUE, registered = TRUE)
 summary(x, script = TRUE)
 ```
 
+    ############
     ## This is preamble code.
     ## Run it before the replication of your first table in the study.
+    ############
 
     ipak <- function (pkg, quietly = FALSE) 
     {
@@ -453,8 +470,10 @@ summary(x, script = TRUE)
 summary(x, table = "table_1", script = TRUE)
 ```
 
+    ############
     ## This is preamble code.
     ## Run it before the replication of your first table in the study.
+    ############
 
     ipak <- function (pkg, quietly = FALSE) 
     {
@@ -584,7 +603,9 @@ summary(x, table = "table_1", script = TRUE)
         return(sum(weights * x)/sum(weights))
     }
 
+    ############
     ## Below is the table replication code
+    ############
 
     table_1 <- mapply(FUN = analyses, MoreArgs = list(DV = "school_grade", treat = "treat", FE = "ethnicity", data = data_individual), covs = list(column_1 = c("male", "income"), column_1_rep = c("male", "income"), column_2 = NULL, column_2_rep = NULL), heterogenous = list(NULL, "iq", NULL, "iq"), subset = list("iq >= 50", NULL, "iq >= 50", NULL), status = list(c(F, T, T), c(T, T, F), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)
 

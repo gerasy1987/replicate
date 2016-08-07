@@ -10,8 +10,23 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, error=FALSE, eval = FALSE, e
 ```
 
 ```{r load_packages, eval = TRUE}
-if (!require(pacman)) install.packages(pacman)
-pacman::p_load(plyr, dplyr, broom, Hmisc, lfe, multiwayvcov, lmtest, wakefield, magrittr)
+ipak <- function(pkg, quietly = FALSE) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  loaded_packages <- sapply(pkg, require, character.only = TRUE)
+  if (any(!loaded_packages))
+    stop(paste0("The following packages required for replication failed to load: ",
+                paste0(names(pkg)[!pkg], collapse = ", "),
+                ". This can cause failure to replicate the study.") )
+  if (all(loaded_packages) & !quietly)
+    cat(paste0("Succesfully installed and/or loaded all packages required for replication: ",
+               paste0(pkg, collapse = ", "), ".\n\n"))
+}
+
+ipak(c("plyr", "dplyr", "broom", "Hmisc", "readr",
+       "lfe", "multiwayvcov", "lmtest", "wakefield", "magrittr"),
+     quietly = TRUE)
 ```
 
 # Description of the replicate functionality:
@@ -109,13 +124,13 @@ source("summary.R")
 
 #### Genearal summary
 
-```{r general_summary, eval=TRUE, results='markup'}
+```{r general_summary, eval=TRUE, results='markup', collapse=FALSE, comment=""}
 summary(x)
 ```
 
 #### Table summary
 
-```{r table_summary, eval=TRUE, results='markup'}
+```{r table_summary, eval=TRUE, results='markup', collapse=FALSE, comment=""}
 summary(x, table = "table_1", reported = TRUE, registered = FALSE)
 summary(x, table = "table_2", reported = TRUE, registered = TRUE)
 ```
