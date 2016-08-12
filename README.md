@@ -1,5 +1,4 @@
 Replicate package [![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)[![License](http://img.shields.io/:license-mit-blue.svg)](http://replicate.mit-license.org)
-
 ================
 
 -   [TODO](#todo)
