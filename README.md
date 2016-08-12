@@ -1,4 +1,5 @@
-Replicate package [![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)
+Replicate package [![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)[![License](http://img.shields.io/:license-mit-blue.svg)](http://replicate.mit-license.org)
+
 ================
 
 -   [TODO](#todo)
@@ -24,6 +25,8 @@ TODO
 
 Description of the replicate functionality:
 -------------------------------------------
+
+---
 
 ### `create_replication()`
 
@@ -64,6 +67,8 @@ There are also 2 additional arguments:
 -   `quietly` (`= FALSE`): Logical. Whether the creation of replication should go without any messages printed to `console`.
 -   `checks` (`= TRUE`): Logical. If `quietly = FALSE`, whether the checks for packages and consistency of replication should be performed.
 
+---
+
 ### `summary()`
 
 *The function takes replication object and either returns miscellaneous description of the object, or if additional arguments are specified, then only summary of parts of object are returned. (see [summary.R](https://github.com/gerasy1987/replicate/blob/master/summary.R) for code).*
@@ -76,6 +81,8 @@ The function takes the following arguments:
 -   `registered` (`= FALSE`): Logical. Whether to show columns with specifications registered in PAP.
 -   `script` (`= FALSE`): Logical. Whether to print the script to replicate the results of the study. If `table = NULL`, then returns preamble which includes all the functions and packages required for replication. If `table != NULL`, then returns preamble and the code for replication of the specified table.
 -   `desc` (`= FALSE`): *To be implemented...*
+
+---
 
 ### Examples
 
@@ -198,6 +205,7 @@ load(file = "example/replication_data.Rdata")
     ##
     ## [[4]]$table_2
     ## [1] "mapply(FUN = analyses, MoreArgs = list(DV = \"turnout\", treat = \"treat\", FE = \"urban\", data = data_admin), covs = list(column_1 = c(\"age\", \"school_grade\"), column_1_rep = c(\"age\", \"school_grade\"), column_2 = c(\"height\", \"income\"), column_3 = c(\"age\", \"school_grade\", \"height\", \"income\"), column_3_rep = c(\"age\", \"school_grade\", \"height\", \"income\")), heterogenous = list(NULL, \"iq\", NULL, NULL, \"iq\"), subset = list(\"iq >= 50\", NULL, \"iq >= 50\", \"iq >= 50\", NULL), status = list(c(F, T, T), c(T, T, F), \n    c(T, T, T), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)"
+
 
 #### Use of `summary.replication()`
 
@@ -605,3 +613,7 @@ summary(x, table = "table_1", script = TRUE)
     table_1 <- mapply(FUN = analyses, MoreArgs = list(DV = "school_grade", treat = "treat", FE = "ethnicity", data = data_individual), covs = list(column_1 = c("male", "income"), column_1_rep = c("male", "income"), column_2 = NULL, column_2_rep = NULL), heterogenous = list(NULL, "iq", NULL, "iq"), subset = list("iq >= 50", NULL, "iq >= 50", NULL), status = list(c(F, T, T), c(T, T, F), c(F, T, T), c(T, F, F)), USE.NAMES = TRUE)
 
     table_1
+
+---
+
+[MIT License](http://replicate.mit-license.org/)
