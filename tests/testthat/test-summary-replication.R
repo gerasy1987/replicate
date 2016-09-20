@@ -38,11 +38,11 @@ test_that("nothing returned with no reported/registered", {
 
 test_that("replication table is not produced, since the required packages are not there", {
   # Test table replication reported
-  expect_error(summary(x, table = "table_1", reported = TRUE))
+  expect_error(summary(x, table = "table_1"))
   # Test table replication reported
   expect_error(summary(x, table = "table_1", registered = TRUE))
   # Test name in a seinsible format
-  expect_error(summary(x, table = "Table 2", reported = TRUE))
+  expect_error(summary(x, table = "Table 2", published = TRUE))
 })
 
 
