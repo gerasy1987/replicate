@@ -40,4 +40,7 @@ data_admin <-
   cbind(data_admin, .) %>%
   as.tbl
 
-save(data_individual, data_admin, file = "replication_data.Rdata")
+# save(data_individual, data_admin, file = "replication_data.Rdata")
+
+write_csv(data_individual, path = "example_fake/data_individual.Rdata")
+write_csv(data_admin, path = "example_fake/data_admin.Rdata")
