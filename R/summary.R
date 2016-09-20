@@ -42,7 +42,7 @@ summary.replication <- function(object,
     detach(environment(object))
 
     structure(out, class = c("summary.replication", "replication.table"))
-  } else if (script & !any(published, registered)) {
+  } else if (script) {
     script_preamble <-
       paste("############\n## This is preamble code.\n## Run it before the replication of your first table in the study.\n############",
             paste0("ipak <- ", paste0(deparse(ipak), collapse = "\n")),
