@@ -4,7 +4,7 @@
 #'
 #' @param object Object of class replication created by \code{create_replication()}.
 #' @param table Character string specifying the table to be replicated. The table name should include number of the table as specified in \code{replication_script_path} file and the word "table".
-#' @param reported Logical. Whether to show columns with specifications reported in the paper.
+#' @param published Logical. Whether to show columns with specifications published in the paper.
 #' @param registered Logical. Whether to show columns with specifications registered in PAP.
 #' @param script Logical. Whether to print the script to replicate the results of the study. If \code{table = NULL}, then returns preamble which includes all the functions and packages required for replication. If \code{table != NULL}, then returns preamble and the code for replication of the specified table.
 #' @param desc To be implemented...
@@ -18,7 +18,7 @@
 
 summary.replication <- function(object,
                                 table = NULL,
-                                reported = FALSE,
+                                published = TRUE,
                                 registered = FALSE,
                                 script = FALSE,
                                 desc = NULL,
@@ -27,27 +27,30 @@ summary.replication <- function(object,
     out <- attr(x = object, which = "misc")
 
     structure(out, class = c("summary.replication"))
-  } else if (!is.null(table) & !script & any(reported, registered)) {
+  } else if (!is.null(table) & !script & any(published, registered)) {
     table_name <- paste0(unlist(strsplit(x = tolower(table), split = " ")), collapse = "_")
 
     attach(environment(object))
     out <- eval(parse(text = object$tables[[table_name]]))
     rep <- reg <- NULL
-    if (reported) rep <- which(do.call(cbind, out["model_status",])["P",])
+    if (published) rep <- which(do.call(cbind, out["model_status",])["P",])
     if (registered) reg <- which(do.call(cbind, out["model_status",])["R",])
 
-    out <- list("Reported" = out[,rep],
+    out <- list("published" = out[,rep],
                 "Registered" = out[,reg])
     attr(out, which = "name") <- table
     detach(environment(object))
 
     structure(out, class = c("summary.replication", "replication.table"))
-  } else if (script & !any(reported, registered)) {
+  } else if (script & !any(published, registered)) {
     script_preamble <-
       paste("############\n## This is preamble code.\n## Run it before the replication of your first table in the study.\n############",
             paste0("ipak <- ", paste0(deparse(ipak), collapse = "\n")),
             paste0("ipak(", paste0(deparse(object$packages), collapse = ""), ")"),
             paste(do.call(c, object$functions), collapse = "\n\n"),
+            paste(sapply(names(object$data),
+                         FUN = function(x) paste0(x, " <- ", deparse(substitute(object)), "$data$", x)),
+                  collapse = "\n\n"),
             sep = "\n\n")
     if (is.null(table)) {
       out <- c(preamble = script_preamble)

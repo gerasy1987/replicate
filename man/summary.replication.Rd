@@ -4,7 +4,7 @@
 \alias{summary.replication}
 \title{Summary method for replication class}
 \usage{
-\method{summary}{replication}(object, table = NULL, reported = FALSE,
+\method{summary}{replication}(object, table = NULL, published = TRUE,
   registered = FALSE, script = FALSE, desc = NULL, ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{table}{Character string specifying the table to be replicated. The table name should include number of the table as specified in \code{replication_script_path} file and the word "table".}
 
-\item{reported}{Logical. Whether to show columns with specifications reported in the paper.}
+\item{published}{Logical. Whether to show columns with specifications published in the paper.}
 
 \item{registered}{Logical. Whether to show columns with specifications registered in PAP.}
 
