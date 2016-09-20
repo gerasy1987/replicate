@@ -36,7 +36,7 @@ summary.replication <- function(object,
     if (published) rep <- which(do.call(cbind, out["model_status",])["P",])
     if (registered) reg <- which(do.call(cbind, out["model_status",])["R",])
 
-    out <- list("published" = out[,rep],
+    out <- list("Published" = out[,rep],
                 "Registered" = out[,reg])
     attr(out, which = "name") <- table
     detach(environment(object))
@@ -48,9 +48,11 @@ summary.replication <- function(object,
             paste0("ipak <- ", paste0(deparse(ipak), collapse = "\n")),
             paste0("ipak(", paste0(deparse(object$packages), collapse = ""), ")"),
             paste(do.call(c, object$functions), collapse = "\n\n"),
-            paste(sapply(names(object$data),
-                         FUN = function(x) paste0(x, " <- ", deparse(substitute(object)), "$data$", x)),
-                  collapse = "\n\n"),
+            do.call("paste",
+                    list(
+                      lapply(names(object$data),
+                             FUN = function(x) paste0(x, " <- ", deparse(substitute(object)), "$data$", x)),
+                      collapse = "\n\n")),
             sep = "\n\n")
     if (is.null(table)) {
       out <- c(preamble = script_preamble)
