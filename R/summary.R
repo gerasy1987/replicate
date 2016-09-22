@@ -43,6 +43,7 @@ summary.replication <- function(object,
 
     structure(out, class = c("summary.replication", "replication.table"))
   } else if (script) {
+    object_name <- deparse(substitute(object))
     script_preamble <-
       paste("############\n## This is preamble code.\n## Run it before the replication of your first table in the study.\n############",
             paste0("ipak <- ", paste0(deparse(ipak), collapse = "\n")),
@@ -51,7 +52,7 @@ summary.replication <- function(object,
             do.call("paste",
                     list(
                       lapply(names(object$data),
-                             FUN = function(x) paste0(x, " <- ", deparse(substitute(object)), "$data$", x)),
+                             FUN = function(x) paste0(x, " <- ", object_name, "$data$", x)),
                       collapse = "\n\n")),
             sep = "\n\n")
     if (is.null(table)) {
