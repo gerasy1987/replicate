@@ -15,8 +15,7 @@
 #' @examples
 #' # To be written...
 #'
-#' @import tidyverse
-#' @import magrittr
+#' @import magrittr dplyr readr
 #'
 #' @export
 
@@ -30,9 +29,9 @@ create_replication <- function(description_list,
                                checks = TRUE) {
 
   # required packages
-  requireNamespace("tidyverse", quietly = TRUE)
+  requireNamespace("dplyr", quietly = TRUE)
   requireNamespace("magrittr", quietly = TRUE)
-  # requireNamespace("readr", quietly = TRUE)
+  requireNamespace("readr", quietly = TRUE)
 
   # checks
   if (!(class(packages) %in% c("NULL", "character")))
@@ -53,7 +52,7 @@ create_replication <- function(description_list,
 
   # check packages
   if (!is.null(packages)) {
-    if (!quietly){
+    if (!quietly) {
       cat("Do you want to check and load packages required for replication? (Yes/No):")
       check_pkg <- readLines(n = 1)
     } else {
@@ -162,7 +161,7 @@ create_replication <- function(description_list,
   attr(replication, which = "misc") <- list(study = study_misc,
                                             tech = technical_misc)
 
-  if (!quietly){
+  if (!quietly) {
     cat("Do you want to check that replication works? (Yes/No):")
     check_rep <- readLines(n = 1)
   } else {

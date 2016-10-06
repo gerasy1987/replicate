@@ -32,9 +32,9 @@ test_that("misc summary works", {
   )
 })
 
-test_that("nothing returned with no reported/registered", {
-  expect_equal(class(summary(x, table = "table_1")), "NULL")
-})
+# test_that("only reported results returned by default", {
+#   expect_equal(length(summary(x, table = "table_1")), 2)
+# })
 
 test_that("replication table is not produced, since the required packages are not there", {
   # Test table replication reported

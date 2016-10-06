@@ -7,9 +7,11 @@ Description: The Package provides a function to create a replication class
     object and summary methods for this class of object.
 Depends:
     R (>= 3.3.0),
-    tidyverse,
-    magrittr
+    dplyr,
+    magrittr,
+    readr
 Suggests:
+    plyr,
     testthat
 License: GPL-2
 Encoding: UTF-8
