@@ -1,6 +1,6 @@
 #' Create replication object
 #'
-#' he function takes main parts of replication object as an arguments and returns the replication class object.
+#' The function takes main parts of replication object as an arguments and returns the replication class object.
 #'
 #' @param description_list List of miscellaneous descriptions of replication.
 #' @param packages Character vector of packages required for replication.

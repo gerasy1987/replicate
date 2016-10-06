@@ -1,4 +1,4 @@
-Package: replicate
+Package: replication
 Title: Replication Package
 Version: 0.0.0.9000
 Authors@R: c(person("Georgiy", "Syunyaev", email = "gs2716@columbia.edu", role = c("aut", "cre")),
