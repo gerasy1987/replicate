@@ -15,9 +15,8 @@
 #' @examples
 #' # To be written...
 #'
-#' @importFrom dplyr tbl as.tbl
-#' @importFrom readr read_file
-#' @importFrom magrittr %>%
+#' @import tidyverse
+#' @import magrittr
 #'
 #' @export
 
@@ -31,9 +30,9 @@ create_replication <- function(description_list,
                                checks = TRUE) {
 
   # required packages
-  requireNamespace("dplyr", quietly = TRUE)
+  requireNamespace("tidyverse", quietly = TRUE)
   requireNamespace("magrittr", quietly = TRUE)
-  requireNamespace("readr", quietly = TRUE)
+  # requireNamespace("readr", quietly = TRUE)
 
   # checks
   if (!(class(packages) %in% c("NULL", "character")))

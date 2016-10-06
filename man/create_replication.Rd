@@ -29,7 +29,7 @@ create_replication(description_list, packages = NULL, project_path = NULL,
 Replication class object
 }
 \description{
-he function takes main parts of replication object as an arguments and returns the replication class object.
+The function takes main parts of replication object as an arguments and returns the replication class object.
 }
 \examples{
 # To be written...
