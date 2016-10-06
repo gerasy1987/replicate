@@ -180,4 +180,3 @@ summary(fake_study, script = TRUE)
 summary(fake_study, table = "table_1", script = TRUE)
 ```
 
-
