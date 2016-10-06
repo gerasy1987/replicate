@@ -1,4 +1,4 @@
 library(testthat)
-library(replicate)
+library(replication)
 
-test_check("replicate")
+test_check("replication")
