@@ -10,7 +10,7 @@ Replication package
         -   [Use of `summary.replication()`](#use-of-summary.replication)
         -   [Showcase for pre-existing replication object](#showcase-for-pre-existing-replication-object)
 
-[![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replicate.svg?branch=master)](https://travis-ci.org/gerasy1987/replicate) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)
+[![GitHub version](https://badge.fury.io/gh/gerasy1987%2Freplicate.svg)](https://badge.fury.io/gh/gerasy1987%2Freplicate) [![Build Status](https://travis-ci.org/gerasy1987/replication.svg?branch=master)](https://travis-ci.org/gerasy1987/replication) [![Coverage Status](https://coveralls.io/repos/github/gerasy1987/replicate/badge.svg?branch=master)](https://coveralls.io/github/gerasy1987/replicate?branch=master)
 
 TODO
 ----
@@ -230,7 +230,7 @@ summary(x, table = "table_1", published = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.018 85.013 [1.018]   0.000
+    1 intercept   85.013     1.013 85.013 [1.013]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -240,7 +240,7 @@ summary(x, table = "table_1", published = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.663 84.937 [0.663]   0.000
+    1 intercept   84.937     0.659 84.937 [0.659]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -256,7 +256,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.851 -0.368 [0.851]   1.332
+    1    intercept   -0.368     0.852 -0.368 [0.852]   1.332
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -266,7 +266,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.675  0.711 [0.675]   0.298
+    1 intercept    0.711     0.666  0.711 [0.666]   0.292
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -276,7 +276,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.143 -0.215 [1.143]   1.148
+    1    intercept   -0.215     1.117 -0.215 [1.117]   1.151
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -290,7 +290,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.248  0.324 [1.248]   0.796
+    1    intercept    0.324     1.197  0.324 [1.197]   0.788
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -302,7 +302,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.675  0.711 [0.675]   0.298
+    1 intercept    0.711     0.666  0.711 [0.666]   0.292
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -312,7 +312,7 @@ summary(x, table = "table_2", published = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.500  0.676 [1.500]   0.655
+    1    intercept    0.676     1.574  0.676 [1.574]   0.670
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
@@ -656,7 +656,7 @@ summary(fake_study, table = "table_1", published = TRUE, registered = FALSE)
     column_1 
 
            term estimate std.error       printout p.value
-    1 intercept   85.013     1.026 85.013 [1.026]   0.000
+    1 intercept   85.013     1.034 85.013 [1.034]   0.000
     2     treat   -1.080     0.922 -1.080 [0.922]   0.242
     3      male   -0.298     0.924 -0.298 [0.924]   0.747
     4    income    0.000     0.000  0.000 [0.000]   0.902
@@ -666,7 +666,7 @@ summary(fake_study, table = "table_1", published = TRUE, registered = FALSE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept   84.937     0.681 84.937 [0.681]   0.000
+    1 intercept   84.937     0.652 84.937 [0.652]   0.000
     2     treat   -1.076     0.921 -1.076 [0.921]   0.243
 
     adj.r.squared = -0.001, n_obs = 997, HETEROGENOUS = NA, FE = ethnicity, CLUSTER = no, IPW = no 
@@ -683,7 +683,7 @@ summary(fake_study, table = "table_2", published = FALSE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.271  0.324 [1.271]   0.800
+    1    intercept    0.324     1.226  0.324 [1.226]   0.793
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -695,7 +695,7 @@ summary(fake_study, table = "table_2", published = FALSE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.710  0.711 [0.710]   0.322
+    1 intercept    0.711     0.641  0.711 [0.641]   0.274
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -705,7 +705,7 @@ summary(fake_study, table = "table_2", published = FALSE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.486  0.676 [1.486]   0.652
+    1    intercept    0.676     1.517  0.676 [1.517]   0.658
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
@@ -728,7 +728,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_1 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.368     0.838 -0.368 [0.838]   1.337
+    1    intercept   -0.368     0.904 -0.368 [0.904]   1.314
     2        treat    0.072     0.058  0.072 [0.058]   0.219
     3          age   -0.004     0.009 -0.004 [0.009]   0.636
     4 school_grade    0.012     0.010  0.012 [0.010]   0.231
@@ -738,7 +738,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.666  0.711 [0.666]   0.291
+    1 intercept    0.711     0.681  0.711 [0.681]   0.302
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -748,7 +748,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_3 
 
               term estimate std.error       printout p.value
-    1    intercept   -0.215     1.115 -0.215 [1.115]   1.152
+    1    intercept   -0.215     1.116 -0.215 [1.116]   1.152
     2        treat    0.068     0.060  0.068 [0.060]   0.262
     3          age   -0.004     0.009 -0.004 [0.009]   0.690
     4 school_grade    0.012     0.010  0.012 [0.010]   0.268
@@ -762,7 +762,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_1_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.324     1.157  0.324 [1.157]   0.781
+    1    intercept    0.324     1.289  0.324 [1.289]   0.803
     2        treat   -0.744     1.508 -0.744 [1.508]   0.624
     3           iq   -0.006     0.009 -0.006 [0.009]   0.474
     4          age   -0.003     0.009 -0.003 [0.009]   0.740
@@ -774,7 +774,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_2 
 
            term estimate std.error       printout p.value
-    1 intercept    0.711     0.666  0.711 [0.666]   0.291
+    1 intercept    0.711     0.681  0.711 [0.681]   0.302
     2     treat    0.051     0.057  0.051 [0.057]   0.380
     3    height   -0.001     0.004 -0.001 [0.004]   0.890
     4    income    0.000     0.000  0.000 [0.000]   0.543
@@ -784,7 +784,7 @@ summary(fake_study, table = "table_2", published = TRUE, registered = TRUE)
     column_3_rep 
 
               term estimate std.error       printout p.value
-    1    intercept    0.676     1.516  0.676 [1.516]   0.658
+    1    intercept    0.676     1.444  0.676 [1.444]   0.642
     2        treat   -0.824     1.546 -0.824 [1.546]   0.597
     3           iq   -0.007     0.009 -0.007 [0.009]   0.431
     4          age   -0.002     0.009 -0.002 [0.009]   0.820
